@@ -4,7 +4,6 @@ $(function () {
     let url = `http://${host}/connect/` + userId;
     let source = new EventSource(url);
     source.onopen = function () {
-        console.log(userId + "加入");
     };
 
     source.addEventListener("message", function (e) {
@@ -104,8 +103,6 @@ function choosePerson() {
             let $content = "";
             // find record
             $.get("/findRecord?userId=" + userId + "&choseId=" + id, function (res) {
-                console.log(res);
-                console.log(userId);
                 $.each(res, function (index, e) {
                     if (index === 0) {
                         $content += `<div class="conversation-start"><span>${e.sendTime}</span></div>`;
