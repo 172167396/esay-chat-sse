@@ -2,6 +2,7 @@ package com.easychat.sse.controller;
 
 
 import com.easychat.sse.dao.MockUserDao;
+import com.easychat.sse.entity.MessageAndUsers;
 import com.easychat.sse.entity.MessageEntity;
 import com.easychat.sse.entity.UserEntity;
 import com.easychat.sse.enums.EventType;
@@ -22,6 +23,7 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 
 @RestController
@@ -60,9 +62,11 @@ public class FluxController {
                 .content(null)
                 .sendTime(LocalDateTime.now())
                 .messageType(EventType.CONNECT.getType())
+                .build();
+        MessageAndUsers messageAndUsers = MessageAndUsers.builder().message(message)
                 .onlineUsers(new ArrayList<>(MockUserDao.userMap.values()))
                 .build();
-        String msg = objectMapper.writeValueAsString(message);
+        String msg = objectMapper.writeValueAsString(messageAndUsers);
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
@@ -80,16 +84,12 @@ public class FluxController {
                 .content(null)
                 .sendTime(LocalDateTime.now())
                 .messageType(EventType.CLOSE.getType())
-                .onlineUsers(Collections.emptyList())
                 .build();
-        String msg = objectMapper.writeValueAsString(message);
+        MessageAndUsers messageAndUsers = MessageAndUsers.builder().message(message).onlineUsers(Collections.emptyList()).build();
+        String msg = objectMapper.writeValueAsString(messageAndUsers);
         SseEmitterServer.batchSendMessage(msg);
     }
 
-    @GetMapping("/test")
-    public void test(String msg,String time){
-        System.out.println(msg+",间隔时间："+time);
-    }
 
     /**
      * 发送给单个人
@@ -100,17 +100,27 @@ public class FluxController {
     @GetMapping("/pushTo")
     public void pushOne(@RequestParam String message, @RequestParam String id, @RequestParam String sender) throws JsonProcessingException {
         UserEntity speaker = MockUserDao.requireThrow(sender, "当前用户不存在，请重新登录");
-        MockUserDao.requireThrow(id, "消息接收人不存在，请刷新页面");
+        UserEntity receiver = MockUserDao.requireThrow(id, "消息接收人不存在，请刷新页面");
         speaker.setLastPush(message);
+
         MessageEntity messageEntity = MessageEntity.builder()
                 .createUserId(sender)
                 .content(message)
                 .sendTime(LocalDateTime.now())
                 .messageType(EventType.PUSH_MESSAGE.getType())
+                .build();
+        MessageAndUsers messageAndUsers = MessageAndUsers.builder().message(messageEntity)
                 .onlineUsers(new ArrayList<>(MockUserDao.userMap.values()))
                 .build();
-        String msg = objectMapper.writeValueAsString(messageEntity);
+        speaker.recordMsg(id, messageEntity);
+        receiver.recordMsg(sender, messageEntity);
+        String msg = objectMapper.writeValueAsString(messageAndUsers);
         SseEmitterServer.sendMessage(id, msg);
+    }
+
+    @GetMapping("/findRecord")
+    public List<MessageEntity> findRecord(@RequestParam String choseId,@RequestParam String userId){
+        return MockUserDao.require(userId).findRecords(choseId);
     }
 
 }

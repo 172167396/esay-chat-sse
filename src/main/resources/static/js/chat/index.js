@@ -3,19 +3,21 @@ $(function () {
 
     let url = `http://${host}/connect/` + userId;
     let source = new EventSource(url);
-    source.onopen = function (event) {
+    source.onopen = function () {
         console.log(userId + "加入");
     };
 
     source.addEventListener("message", function (e) {
         let msgJson = JSON.parse(e.data);
+        let messageEntity = msgJson.message;
+        let users = msgJson.onlineUsers;
         let $people = $(".people");
-        if (msgJson.messageType === 1) {
-            renderUsers(msgJson, $people);
-        } else if (msgJson.messageType === 2) {
-            renderMsg(msgJson);
-        } else if (msgJson.messageType === 3) {
-            removeUser(msgJson.createUserId);
+        if (messageEntity.messageType === 1) {
+            renderUsers(users, $people);
+        } else if (messageEntity.messageType === 2) {
+            renderMsg(messageEntity);
+        } else if (messageEntity.messageType === 3) {
+            removeUser(messageEntity.createUserId);
         }
         choosePerson();
     });
@@ -28,11 +30,12 @@ $(function () {
     $(".send").click(sendMsg);
 
     let _beforeUnload_time = 0, _gap_time = 0;
-    let is_fireFox = navigator.userAgent.indexOf("Firefox") > -1;//是否是火狐浏览器
+    //是否是火狐浏览器
+    // let is_fireFox = navigator.userAgent.indexOf("Firefox") > -1;
     window.onunload = function () {
         _gap_time = new Date().getTime() - _beforeUnload_time;
         if (_gap_time <= 5) {
-            $.get("/close/"+userId);
+            $.get("/close/" + userId);
         }
         // else {
         //     //刷新
@@ -47,19 +50,20 @@ $(function () {
 
 function removeUser(id) {
     $(`li[data-id='${id}']`).remove();
+    $(".sendTo").text("");
+    $(`#${id}`).remove();
 }
 
 function getDate(dt) {
-    undefined
-    var year = dt.getFullYear();
-    var month = dt.getMonth() + 1;
-    var day = dt.getDate();
-    var hour = dt.getHours();
-    var minut = dt.getMinutes();
-    var second = dt.getSeconds();
+    let year = dt.getFullYear();
+    let month = dt.getMonth() + 1;
+    let day = dt.getDate();
+    let hour = dt.getHours();
+    let minute = dt.getMinutes();
+    let second = dt.getSeconds();
     //星期
-    var arr = ["天", "一", "二", "三", "四", "五", "六"];
-    var week = dt.getDay();//4
+    // let arr = ["天", "一", "二", "三", "四", "五", "六"];
+    // let week = dt.getDay();//4
 
 
     // month = month < 10 ? "0" + month : month;
@@ -74,7 +78,7 @@ function getDate(dt) {
         return i;
     }
 
-    return year + "-" + buWei(month) + "-" + buWei(day) + " " + buWei(hour) + ":" + buWei(minut) + ":" + buWei(second);
+    return year + "-" + buWei(month) + "-" + buWei(day) + " " + buWei(hour) + ":" + buWei(minute) + ":" + buWei(second);
 }
 
 
@@ -97,7 +101,19 @@ function choosePerson() {
         if (chatPage.length > 0) {
             chatPage.addClass("active active-chat");
         } else {
-            $(".write").before(`<div class="chat active active-chat" id="${id}" data-id="${id}"></div>`);
+            let $content = "";
+            // find record
+            $.get("/findRecord?userId=" + userId + "&choseId=" + id, function (res) {
+                console.log(res);
+                console.log(userId);
+                $.each(res, function (index, e) {
+                    if (index === 0) {
+                        $content += `<div class="conversation-start"><span>${e.sendTime}</span></div>`;
+                    }
+                    $content += `<div class="bubble ${e.createUserId === userId ? 'me' : 'you'}">${e.content}</div>`;
+                })
+                $(".write").before(`<div class="chat active active-chat" id="${id}" data-id="${id}">${$content}</div>`);
+            })
         }
     });
 }
@@ -126,11 +142,11 @@ function sendMsg() {
     $message.val("");
 }
 
-function renderMsg(msgJson) {
-    let msg = msgJson.content;
-    let createUser = msgJson.createUserId;
+function renderMsg(messageEntity) {
+    let msg = messageEntity.content;
+    let createUser = messageEntity.createUserId;
     let $user = $(`li[data-id='${createUser}']`);
-    let sendTime = msgJson.sendTime;
+    let sendTime = messageEntity.sendTime;
     let chatPage = $(`#${createUser}`);
     if (chatPage.length > 0) {
         let startTime = chatPage.children(".conversation-start");
@@ -169,8 +185,8 @@ function renderMsg(msgJson) {
     $unRead.text(c);
 }
 
-function renderUsers(msgJson, userTab) {
-    let others = [...msgJson.onlineUsers].filter(u => u.id !== userId);
+function renderUsers(users, userTab) {
+    let others = [...users].filter(u => u.id !== userId);
     userTab.empty();
     $.each(others, function (index, ele) {
         let userInfo = `<li data-id="${ele.id}" data-name="${ele.userName}" class="person" data-chat="person${index}">

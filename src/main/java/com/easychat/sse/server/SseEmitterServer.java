@@ -42,7 +42,7 @@ public class SseEmitterServer {
         sseEmitter.onError(errorCallBack(userId));
         sseEmitter.onTimeout(timeoutCallBack(userId));
         UserEntity userEntity = MockUserDao.userMap.get(userId);
-        if(userEntity == null){
+        if (userEntity == null) {
             return null;
         }
         sseEmitterMap.put(userId, sseEmitter);
@@ -128,7 +128,7 @@ public class SseEmitterServer {
 
     private static Consumer<Throwable> errorCallBack(String userId) {
         return throwable -> {
-            log.info("连接异常：{}", userId);
+            log.info("连接异常：{}", userId, throwable);
             removeUser(userId);
         };
     }
