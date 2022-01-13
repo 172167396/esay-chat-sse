@@ -73,8 +73,7 @@ function getDate(dt) {
 
     //定义一个补位的函数
     function buWei(i) {
-        i = i < 10 ? "0" + i : i;
-        return i;
+        return i < 10 ? "0" + i : i;
     }
 
     return year + "-" + buWei(month) + "-" + buWei(day) + " " + buWei(hour) + ":" + buWei(minute) + ":" + buWei(second);
@@ -131,9 +130,7 @@ function sendMsg() {
     $.get("/pushTo?message=" + message + "&id=" + sendTo + "&sender=" + userId);
     let $sendTime = $active.children(".conversation-start");
     if ($sendTime.length === 0) {
-        $active.append(`<div class="conversation-start">
-                    <span>${getDate(new Date())}</span>
-                </div>`);
+        $active.append(`<div class="conversation-start"><span>${getDate(new Date())}</span></div>`);
     }
     $active.append(`<div class="bubble me">${message}</div>`);
     $message.val("");
@@ -148,22 +145,14 @@ function renderMsg(messageEntity) {
     if (chatPage.length > 0) {
         let startTime = chatPage.children(".conversation-start");
         if (startTime.length === 0) {
-            chatPage.append(`<div class="conversation-start">
-                    <span>${sendTime}</span>
-                </div>`);
+            chatPage.append(`<div class="conversation-start"><span>${sendTime}</span></div>`);
         }
-        chatPage.append(`<div class="bubble ${createUser === userId ? 'me' : 'you'}">
-                    ${msg}
-                </div>`)
+        chatPage.append(`<div class="bubble ${createUser === userId ? 'me' : 'you'}">${msg}</div>`)
     } else {
         $(".write").before(`<div class="chat" id="${createUser}" data-id="${createUser}">
-                <div class="conversation-start">
-                    <span>${sendTime}</span>
-                </div>
-                <div class="bubble ${createUser === userId ? 'me' : 'you'}">
-                    ${msg}
-                </div>
-            </div>`);
+                <div class="conversation-start"><span>${sendTime}</span></div>
+                <div class="bubble ${createUser === userId ? 'me' : 'you'}">${msg}</div>
+                </div>`);
     }
     let $unRead = $user.children(".notRead");
     let $prevMsg = $user.children(".preview");
