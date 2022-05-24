@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class LoginController {
 
+    @GetMapping({"", "/"})
+    public String redirect() {
+        return "redirect:/login";
+    }
+
     @GetMapping("/login")
     public String login() {
         return "chat/login";
