@@ -1,5 +1,5 @@
-<html lang="en">
-<head>
+<html lang="zh_cn" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="header :: common_header(~{::title},~{::link},~{})">
     <meta charset="UTF-8">
     <title>聊天吹水</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,11 +8,34 @@
 </head>
 <body>
 <div class="wrapper">
+    <div>
+        <input class="username" type="hidden" th:value="${username}">
+    </div>
     <div class="container">
-        <div class="left">
-            <div class="top">
-                <input type="text" placeholder="搜索" />
-                <a href="javascript:" class="search"></a>
+        <div class="left" id="leftPanel">
+            <div class="top" style="position: relative">
+                <input type="text" placeholder="搜索"/>
+                <svg id="addBtn" style="margin: 0 0.3em 0 2em;cursor: pointer;" t="1654139334069" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2289" width="20" height="32"><path d="M512 512V170.666667h42.666667v341.333333h341.333333v42.666667h-341.333333v341.333333h-42.666667v-341.333333H170.666667v-42.666667h341.333333z" fill="#444444" p-id="2290"></path></svg>
+                <div id="addPanel" style="display: none">
+                    <p id="addFriend" data-action="friend" class="addAction">加好友/加群</p>
+                    <p id="createChatGroup" data-action="group" class="addAction">创建群聊</p>
+                </div>
+            </div>
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">好友</li>
+                    <li>群聊</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div id="myGroups">
+                            <div class="layui-bg-gray" style="height: auto; text-align: center;">
+                                <div id="userGroups" class="demo-tree-more"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">内容2</div>
+                </div>
             </div>
             <ul class="people">
             </ul>
@@ -28,10 +51,6 @@
         </div>
     </div>
 </div>
-<script src="/js/chat/jquery.min.js"></script>
-<script th:inline="javascript">
-    let userId = [[${userId}]] ?? "";
-</script>
-<script src="/js/chat/index.js"></script>
+<script th:src="@{/js/chat/index.js}"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 package com.easychat.sse.dao;
 
-import com.easychat.sse.entity.UserEntity;
+import com.easychat.sse.model.entity.OldUserEntity;
 import com.easychat.sse.exception.CustomRuntimeException;
 
 import java.time.LocalTime;
@@ -14,32 +14,32 @@ public class MockUserDao {
 
     private static final List<String> avatars = Arrays.asList("avatar1.jpg", "avatar2.jpg", "avatar3.jpg", "avatar4.jpg");
 
-    public static final Map<String, UserEntity> userMap = new ConcurrentHashMap<>();
+    public static final Map<String, OldUserEntity> userMap = new ConcurrentHashMap<>();
 
-    public static UserEntity require(String id) {
-        UserEntity userEntity = userMap.get(id);
-        if (userEntity == null) {
+    public static OldUserEntity require(String id) {
+        OldUserEntity oldUserEntity = userMap.get(id);
+        if (oldUserEntity == null) {
             throw new CustomRuntimeException("用户不存在");
         }
-        return userEntity;
+        return oldUserEntity;
     }
 
-    public static UserEntity requireThrow(String id,String msg) {
-        UserEntity userEntity = userMap.get(id);
-        if (userEntity == null) {
+    public static OldUserEntity requireThrow(String id, String msg) {
+        OldUserEntity oldUserEntity = userMap.get(id);
+        if (oldUserEntity == null) {
             throw new CustomRuntimeException(msg);
         }
-        return userEntity;
+        return oldUserEntity;
     }
 
 
-    public static UserEntity registryLogin(String userName) {
-        boolean sameName = userMap.values().stream().anyMatch(u -> u.getUserName().equals(userName));
+    public static OldUserEntity registryLogin(String account) {
+        boolean sameName = userMap.values().stream().anyMatch(u -> u.getAccount().equals(account));
         if (sameName) throw new CustomRuntimeException("用户名已存在");
         String userId = UUID.randomUUID().toString().replace("-", "");
         int avatar = (int) Math.floor(Math.random() * 4);
         String avatarName = avatars.get(avatar);
-        UserEntity user = new UserEntity(userId, userName, avatarName, LocalTime.now(),null);
+        OldUserEntity user = new OldUserEntity(userId, account, avatarName, LocalTime.now(),null);
         userMap.put(userId, user);
         return user;
     }

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Builder
 public class LoginInfo {
 
-    private String userName;
+    private String account;
 
     private int userCount;
 

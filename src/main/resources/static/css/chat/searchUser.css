@@ -1,0 +1,71 @@
+.layui-tab-title {
+    text-align: center !important;
+}
+
+.layui-tab-title li {
+    margin: 0 28px !important;
+}
+
+.searchInput {
+    width: 78%;
+    border: 1px solid var(--light);
+    height: 32px;
+    margin: 20px 5px 0px 20px;
+    border-radius: 5px 5px;
+    background-color: #eceff1;
+    padding: 0 0 0 5px;
+}
+
+.searchBtn {
+    width: 65px;
+    height: 30px;
+    color: white;
+    background-color: rgb(83, 144, 255);
+    border: 1px solod var(--light);
+    border-radius: 3px 3px;
+}
+
+.avatarDiv {
+    float: left;
+}
+
+.userAvatar {
+    width: 65px;
+    height: 65px;
+    border-radius: 15%;
+}
+
+.userInfo {
+    width: 100px;
+    padding: 3px;
+}
+
+.gender {
+    width: 100px;
+    height: 18px;
+    padding: 2px 0;
+    background-size: 20px;
+}
+
+.apply {
+    color: white;
+    background-color: rgb(54 117 233);
+    border: 1px solod var(--light);
+    padding: 0 5px;
+    border-radius: 3px;
+    height: 19px;
+    line-height: 19px;
+    cursor: pointer;
+}
+
+.user {
+    padding: 0 12px 3px 12px;
+}
+
+.layui-tab {
+    margin: 0;
+}
+
+#searchResult {
+    background-color: aliceblue;
+}

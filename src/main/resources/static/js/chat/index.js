@@ -1,31 +1,43 @@
 let host = location.host;
 $(function () {
+    layui.use(['tree', 'dropdown', 'util'], function () {
+        let tree = layui.tree
+            , layer = layui.layer
+            , util = layui.util,
+            dropdown = layui.dropdown;
+        initFriendGroups(tree).then(function () {
+            initDropdown(dropdown);
+            clickGroup();
+        });
+        bindAddBtn();
+        registerAddBtnClick(layer);
+    });
 
-    let url = `http://${host}/connect/` + userId;
+
+    let url = `http://${host}/connect/`;
     let source = new EventSource(url);
     source.onopen = function () {
+        console.log("connected.....");
     };
 
     source.addEventListener("message", function (e) {
         let msgJson = JSON.parse(e.data);
         let messageEntity = msgJson.message;
-        let users = msgJson.onlineUsers;
-        let $people = $(".people");
-        if (messageEntity.messageType === 1) {
-            renderUsers(users, $people);
-        } else if (messageEntity.messageType === 2) {
-            renderMsg(messageEntity);
-        } else if (messageEntity.messageType === 3) {
-            removeUser(messageEntity.createUserId);
-        }
-        choosePerson();
+        console.log(msgJson);
+        console.log(messageEntity);
+        // let users = msgJson.onlineUsers;
+        // let $people = $(".people");
+        // if (messageEntity.messageType === 1) {
+        //     renderUsers(users, $people);
+        // } else if (messageEntity.messageType === 2) {
+        //     renderMsg(messageEntity);
+        // } else if (messageEntity.messageType === 3) {
+        //     removeUser(messageEntity.createUserId);
+        // }
+        // choosePerson();
     });
-
-    $(document).keyup(function (event) {
-        if (event.keyCode === 13) {
-            sendMsg();
-        }
-    });
+    //监听enter
+    onEnter(sendMsg);
     $(".send").click(sendMsg);
 
     let _beforeUnload_time = 0, _gap_time = 0;
@@ -46,6 +58,132 @@ $(function () {
     };
 })
 
+function registerAddBtnClick(layer) {
+    $(".addAction").click(function () {
+        let $this = $(this),
+            action = $this.data("action");
+        let index = layer.open({
+            type: 2,
+            offset: '160px',
+            title: ' ',
+            maxmin: false,
+            id: 'layerDemo' + action, //防止重复弹出,
+            content: ctx + "/user/searchPage/" + action,
+            // ,btn: '关闭全部'
+            // ,btnAlign: 'c' //按钮居中
+            shade: 0, //不显示遮罩
+            // title: false,
+            area: ['600px', '220px'],
+            fixed: false
+            // ,yes: function(){
+            //     layer.closeAll();
+            // }
+        });
+        localStorage.setItem("searchPageIndex", index);
+    })
+}
+
+function bindAddBtn() {
+    let $addBtn = $("#addBtn"),
+        $addPanel = $("#addPanel");
+    $addBtn.click(function () {
+        $("#addPanel").show();
+    })
+    $addBtn.mouseleave(function () {
+        $("#addPanel").hide();
+    })
+    $addPanel.mouseenter(function () {
+        $("#addPanel").show();
+    })
+    $addPanel.mouseleave(function () {
+        $("#addPanel").hide();
+    })
+}
+
+function clickGroup() {
+    let $group = $(".layui-tree-main");
+    $group.click(function () {
+        $(this).find("i").toggleClass("layui-tree-iconArrow-down");
+    })
+}
+
+function initFriendGroups(tree) {
+    return getGroups().then(data => {
+        tree.render({
+            elem: '#userGroups'
+            , data: data
+            , showLine: false  //是否开启连接线
+        });
+        //不知道为啥arrow没了
+        $(".layui-tree").find("i").each(function (i, e) {
+            $(e).removeClass("layui-hide");
+        });
+    });
+}
+
+function initDropdown(dropdown) {
+    //右键菜单
+    var inst = dropdown.render({
+        elem: '#myGroups' //也可绑定到 document，从而重置整个右键
+        , trigger: 'contextmenu' //contextmenu
+        , isAllowSpread: false //禁止菜单组展开收缩
+        , style: 'width: 200px' //定义宽度，默认自适应
+        , id: 'test777' //定义唯一索引
+        , data: [{
+            title: 'menu item 1'
+            , id: 'test'
+        }, {
+            title: 'Printing'
+            , id: 'print'
+        }, {
+            title: 'Reload'
+            , id: 'reload'
+        }, {type: '-'}, {
+            title: 'menu item 3'
+            , id: '#3'
+            , child: [{
+                title: 'menu item 3-1'
+                , id: '#1'
+            }, {
+                title: 'menu item 3-2'
+                , id: '#2'
+            }, {
+                title: 'menu item 3-3'
+                , id: '#3'
+            }]
+        }, {type: '-'}, {
+            title: 'menu item 4'
+            , id: ''
+        }, {
+            title: 'menu item 5'
+            , id: '#1'
+        }, {
+            title: 'menu item 6'
+            , id: '#1'
+        }]
+        , click: function (obj, othis) {
+            if (obj.id === 'test') {
+                layer.msg('click');
+            } else if (obj.id === 'print') {
+                window.print();
+            } else if (obj.id === 'reload') {
+                location.reload();
+            }
+        }
+    });
+}
+
+function getGroups() {
+    return fetch(ctx + "/user/groups")
+        .then(res => res.json())
+        .then(r => {
+            if (r.code !== 200) {
+                layer.alert();
+                return null;
+            }
+            return r.data;
+        })
+}
 
 function removeUser(id) {
     $(`li[data-id='${id}']`).remove();
@@ -175,9 +313,9 @@ function renderUsers(users, userTab) {
     let others = [...users].filter(u => u.id !== userId);
     userTab.empty();
     $.each(others, function (index, ele) {
-        let userInfo = `<li data-id="${ele.id}" data-name="${ele.userName}" class="person" data-chat="person${index}">
+        let userInfo = `<li data-id="${ele.id}" data-name="${ele.account}" class="person" data-chat="person${index}">
                     <img src="img/${ele.avatar}" alt="" />
-                    <span class="name">${ele.userName}</span>
+                    <span class="name">${ele.account}</span>
                     <span class="time">${ele.loginTime}</span>
                     <span class="notRead"></span>
                     <span class="preview">${ele.lastPush ?? ""}</span>

@@ -1,8 +1,5 @@
-package com.easychat.sse.entity;
+package com.easychat.sse.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import lombok.*;
 
 import java.time.LocalTime;
@@ -14,9 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @Setter
-public class UserEntity {
+public class OldUserEntity {
     private String id;
-    private String userName;
+    private String account;
     private String avatar;
     private LocalTime loginTime;
     private String lastPush;
@@ -34,9 +31,9 @@ public class UserEntity {
         return recentConversationRecord.getOrDefault(receiverId, Collections.emptyList());
     }
 
-    public UserEntity(String id, String userName, String avatar, LocalTime loginTime, String lastPush) {
+    public OldUserEntity(String id, String account, String avatar, LocalTime loginTime, String lastPush) {
         this.id = id;
-        this.userName = userName;
+        this.account = account;
         this.avatar = avatar;
         this.loginTime = loginTime;
         this.lastPush = lastPush;

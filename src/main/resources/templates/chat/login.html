@@ -1,63 +1,48 @@
-﻿<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
-    <link rel="stylesheet" href="/css/chat/reset.css"/>
-    <link rel="stylesheet" href="/css/chat/login.css"/>
-    <script type="text/javascript" src="/js/chat/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/chat/login.js"></script>
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="header :: common_header(~{::title},~{::link},~{})">
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/chat/login.css">
 </head>
 <body>
-<div class="page">
-    <div class="loginwarrp">
-        <div class="logo">摸鱼聊天室</div>
-        <div class="login_form">
-            <form id="Login" name="Login" method="post" onsubmit="javascript:;" action="">
-                <li class="login-item">
-                    <span>用户名：</span>
-                    <input type="text" autocomplete="off" id="username" placeholder="用户名随便输" name="UserName"
-                           class="login_input">
-                    <span id="count-msg" class="error"></span>
-                </li>
-<!--                <li class="login-item">&ndash;&gt;-->
-<!--                    <span>密　码：</span>&ndash;&gt;-->
-<!--                    <input type="password" id="password" autocomplete="off" name="password" class="login_input">&ndash;&gt;-->
-<!--                    <span id="password-msg" class="error"></span>&ndash;&gt;-->
-<!--                </li>-->
-<!--                <li class="login-item verify">-->
-<!--                    <span>验证码：</span>-->
-<!--                    <input type="text" name="CheckCode" class="login_input verify_input">-->
-<!--                </li>-->
-<!--                <img src="images/verify.png" border="0" class="verifyimg"/>-->
-                <div class="clearfix"></div>
-                <li class="login-sub">
-                    <input style="text-align: center;cursor: pointer" class="loginBtn" name="Submit" value="登录"/>
-                    <input type="reset" name="Reset" value="重置"/>
-                </li>
-            </form>
+<canvas class="cavs" width="1366" height="625"></canvas>
+
+<div class="loginmain">
+    <div class="login-title">
+        <span>用户登录</span>
+    </div>
+
+    <div class="login-con">
+        <div class="login-user">
+            <div class="icon">
+                <img src="/img/user_icon_copy.png" alt="">
+            </div>
+            <input type="text" class="account" name="account" placeholder="账号" autocomplete="off" value="">
+        </div>
+        <div class="login-pwd">
+            <div class="icon">
+                <img src="/img/lock_icon_copy.png" alt="">
+            </div>
+            <input type="password" class="password" name="pwd" placeholder="密码" autocomplete="off" value="">
+        </div>
+        <div class="login-yan">
+            <div class="icon">
+                <img src="/img/key.png" alt="">
+            </div>
+            <input type="text" name="pwd" placeholder="验证码" autocomplete="off" value="">
+        </div>
+        <a style="color: #bdbbbb;text-align: right;cursor: pointer;float: right;text-decoration: unset" target="_blank" th:href="@{/register}">注册账号</a>
+        <div class="login-btn">
+            <input type="button" class="loginBtn" value="登录">
         </div>
     </div>
-</div>
-<script type="text/javascript">
-    window.onload = function () {
-        let config = {
-            vx: 4,
-            vy: 4,
-            height: 2,
-            width: 2,
-            count: 100,
-            color: "121, 162, 185",
-            stroke: "100, 200, 180",
-            dist: 6000,
-            e_dist: 20000,
-            max_conn: 10
-        };
-        CanvasParticle(config);
-    };
 
-</script>
-<script type="text/javascript" src="/js/chat/canvas-particle.js"></script>
+</div>
+
 </body>
 </html>
+<script src="/js/chat/jquery.min.js"></script>
+<script src="/js/chat/ban.js"></script>
+<script src="/js/base64.js"></script>
+<script src="/js/chat/login.js"></script>

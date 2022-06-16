@@ -10,9 +10,17 @@ public class R<T> {
     private String msg;
     private T data;
 
+    private static final String SUCCESS_MSG = "操作成功";
+    private static final String ERROR_MSG = "操作失败";
+
     public static <T> R<T> success(T data) {
         return new R<>(200, data, null);
     }
+
+    public static <T> R<T> success() {
+        return success(null, SUCCESS_MSG);
+    }
+
 
     public static <T> R<T> success(T data, String msg) {
         return new R<>(200, data, msg);
@@ -20,6 +28,10 @@ public class R<T> {
 
     public static <T> R<T> fail(Integer code, T data, String msg) {
         return new R<>(code, data, msg);
+    }
+
+    public static <T> R<T> fail() {
+        return fail(null,ERROR_MSG);
     }
 
     public static <T> R<T> fail(T data, String msg) {

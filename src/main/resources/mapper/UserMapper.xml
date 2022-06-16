@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easychat.sse.dao.UserMapper">
+    <sql id="column">
+        id,name,account,password,gender,address,mobile
+    </sql>
+
+    <insert id="save">
+        insert into sys_user (<include refid="column"></include>)
+        values (#{id},#{name},#{account},#{password},#{gender},#{address},#{mobile})
+    </insert>
+
+    <insert id="initUserGroup">
+        insert into sys_friend_group(id,name,create_user,create_time) values(#{id},#{name},#{createUser},#{createTime})
+    </insert>
+
+    <select id="getUserByAccount" resultType="com.easychat.sse.model.entity.UserEntity">
+        select id,name,account,password,gender,address,mobile from sys_user where account = #{value}
+    </select>
+    <select id="getUserGroups" resultType="com.easychat.sse.model.dto.IdTitle">
+        select id,name title from sys_friend_group where create_user = #{value}
+    </select>
+    <select id="searchUser" resultType="com.easychat.sse.model.dto.SimpleUser">
+        select u.id,u.name,u.account,u.gender,f.bucket,f.file_name from sys_user u
+        left join sse_file f on u.avatar_id = f.id
+        where u.account = #{value} or u.name = #{value}
+    </select>
+    <select id="getById" resultType="com.easychat.sse.model.entity.UserEntity">
+        select <include refid="column"></include> from sys_user where id = #{value}
+    </select>
+    <select id="getSimpleUserInfo" resultType="com.easychat.sse.model.dto.SimpleUser">
+        select u.id,u.name,u.account,u.gender,f.bucket,f.file_name from sys_user u
+        left join sse_file f on u.avatar_id = f.id
+        where u.id = #{value}
+    </select>
+    <select id="queryUserGroup" resultType="com.easychat.sse.model.dto.IdName">
+        select id,name from sys_friend_group where create_user = #{value}
+    </select>
+</mapper>

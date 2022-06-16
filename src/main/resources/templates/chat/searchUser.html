@@ -1,0 +1,26 @@
+<html lang="zh_cn" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="header :: common_header(~{::title},~{::link},~{})">
+    <link rel="stylesheet" th:href="@{/css/chat/searchUser.css}">
+<head>
+    <meta charset="UTF-8">
+    <title>查找用户或群聊</title>
+</head>
+<body>
+<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+        <li class="layui-this">找好友</li>
+        <li>找群</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <input class="searchInput" placeholder="请输入对方的账号或昵称">
+            <button class="searchBtn" type="button" data-action="user">查找</button>
+        </div>
+        <div class="layui-tab-item">暂未实现</div>
+    </div>
+    <div id="searchResult">
+    </div>
+</div>
+</body>
+<script th:src="@{/js/chat/searchUser.js}"></script>
+</html>

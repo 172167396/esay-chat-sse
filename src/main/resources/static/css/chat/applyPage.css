@@ -1,0 +1,61 @@
+.user-short-con {
+    text-align: center;
+    padding: 8px 0 12px 0;
+}
+
+.user-short-con > img {
+    width: 8em;
+    height: 8em;
+    border-radius: 15%;
+}
+
+.left {
+    background-color: aliceblue;
+}
+
+.right {
+    width: 66%;
+    padding: 8px 0 0 10px;
+    float: right;
+}
+
+.left p {
+    padding: 5px 0 0 12px;
+}
+
+.left p:nth-child(3) {
+    padding: 5px 0 10px 12px !important;
+    background-color: aliceblue;
+}
+
+textarea {
+    resize: none;
+    border: 1px solid #d9cfcf;
+    margin-top: 10px;
+}
+
+.gray-color {
+    color: #a5a0a4;
+}
+
+.layui-layer-btn-r {
+    font-size: 12px !important;
+}
+
+.layui-layer-btn0 {
+    background-color: white !important;
+}
+
+.input-nickName {
+    height: 23px;
+    border: 1px solid #c7c4c4;
+    border-radius: 3px;
+    padding-left: 3px;
+}
+
+select[name='group-select']{
+    width: 12.2em;
+    height: 1.5em;
+    border: 1px solid #c7c4c4;
+    border-radius: 2px;
+}

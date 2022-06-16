@@ -1,0 +1,57 @@
+<html lang="zh_cn" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="header :: common_header(~{::title},~{::link},~{})">
+    <link rel="stylesheet" th:href="@{/css/chat/applyPage.css(v=1)}">
+    <head>
+        <meta charset="UTF-8">
+        <title>添加好友</title>
+    </head>
+<body>
+<div>
+    <div class="left" style="float: left;width: 30%;">
+        <div class="user-short-con">
+            <img th:src="${user.avatarUrl}" class="userAvatar">
+        </div>
+        <p th:text="${user.name}"></p>
+        <p th:text="${user.account}"></p>
+        <p class="gray-color" th:text="${user.gender == '0' ? '性别：女':'性别：男'}"></p>
+        <p class="gray-color">年龄：</p>
+        <p class="gray-color">所在地：</p>
+    </div>
+    <div class="right">
+        <div class="apply-msg">
+            <p>请输入验证信息：</p>
+            <textarea placeholder="我是..." onfocus="this.value='我是'" rows="5" cols="40" autofocus></textarea>
+        </div>
+        <div class="choose-group" style="display: none;">
+            <div>
+                <span>备注姓名：</span><input class="input-nickName" autocomplete="off"/>
+            </div>
+            <div style="margin-top: 10px;">
+                <label>分&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;组：</label>
+                <div style="display: inline-block;margin-left: -3px;">
+                    <select class="group-select" name="group-select">
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="finish" style="display: none;margin-top: 2em;">
+            <div>
+                <svg t="1655362312172" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                     xmlns="http://www.w3.org/2000/svg" p-id="3273" width="36" height="36">
+                    <path d="M512 960C264.577 960 64 759.424 64 512S264.577 64 512 64s448 200.576 448 448-200.577 448-448 448z m246.632-610.632c-12.491-12.491-32.742-12.491-45.233 0L456 606.767 310.601 461.368c-12.491-12.491-32.742-12.491-45.233 0s-12.491 32.742 0 45.233l167.703 167.703c0.104 0.107 0.191 0.223 0.297 0.328 6.249 6.249 14.441 9.372 22.632 9.368 8.191 0.004 16.383-3.118 22.632-9.368 0.106-0.105 0.193-0.222 0.297-0.328l279.703-279.703c12.491-12.491 12.491-32.742 0-45.233z"
+                          p-id="3274" fill="#21d22f"></path>
+                </svg>
+                <span style="display: inline-block;width: 82%;font-size: 13px;">你的好友添加请求已经发送成功,正在等待对方确认。</span>
+            </div>
+            <div style="margin-top: 4em;font-size: 13px;">
+                <label>您可能还认识这些人：</label>
+                <div style="display: inline-block;margin-left: -3px;">
+                    暂时没有可能认识的人推荐，多加几个好友试试吧
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script th:src="@{/js/chat/apply.js}"></script>
+</html>

@@ -1,65 +1,119 @@
-body{
-	background: #ddd
+*{
+    margin: 0;
+    padding: 0;
 }
-.loginwarrp{
-	margin: 250px auto;
-    width: 400px;
-    padding: 30px 50px;
-    background: #FFFFFF;
-    overflow: hidden;
-    font-size: 14px;
-    font-family: 'Î¢ÈíÑÅºÚ','ÎÄÈªæäÕýºÚ','ºÚÌå';
+.cavs{
+    z-index:1;
+    position: fixed;
+    width:95%;
+    margin-left: 20px;
+    margin-right: 20px;
 }
-.loginwarrp .logo{
-	width:100%;
-	height:44px;
-	line-height: 44px;
-	font-size: 20px;
-	text-align: center;
-	border-bottom:1px solid #ddd;
+
+html,body{
+    width: 100%;
+    height: 100%;
+    background: url("../../img/bg1.jpg") no-repeat;
+    background-size: 100% 100%;
+
 }
-.loginwarrp .login_form{
-	margin-top: 15px;
+
+
+
+.loginmain{
+    background: rgba(0, 0, 0, 0.5);
+    width: 540px;
+    height: 300px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    padding: 100px 40px 40px 40px;
+    box-shadow: -15px 15px 15px rgba(6, 17, 47, 0.7);
+    z-index: 99999;
 }
-.loginwarrp .login_form .login-item{
-	padding: 2px 8px;
-	border:1px solid #dedede;
-	border-radius: 8px;
-	margin-top: 10px;
+.login-title{
+    color: #D3D7F7;
+    height: 60px;
+    font-size:20px;
+    text-align: center;
+    margin-top: -20px;
 }
-.loginwarrp .login_form .login_input{
-	height: 35px;
-    border: none;
-    line-height: 35px;
-    width: 200px;
-    font-size: 14px;
+.login-con{
+    height: 208px;
+    position: absolute;
+    left: 0;
+    width: 80%;
+    margin:0 10%;
+}
+.login-user{
+    position: relative;
+}
+.icon{
+    position: absolute;
+    z-index: 1;
+    left: 36px;
+    top: 8px;
+    opacity: 1;
+}
+.login-con input{
+    width: calc(100% - 130px);
+    margin-top: -2px;
+    background: rgba(57, 61, 82, 0);
+    left: 0;
+    padding: 10px 65px;
+    border-top: 2px solid rgba(57, 61, 82, 0);
+    border-bottom: 2px solid rgba(57, 61, 82, 0);
+    border-right: none;
+    border-left: none;
     outline: none;
+    font-family: 'Gudea', sans-serif;
+    box-shadow: none;
+    color: #61BFFF !important;
 }
-.loginwarrp .login_form .verify{
-	float: left;
+.login-pwd, .login-yan{
+    position: relative;
 }
-.loginwarrp .verify .verify_input{
-	width: 160px;
+/*
+.login-pwd .icon{
+    position: absolute;
+    z-index: 1;
+    left: 36px;
+    top: 8px;
+    opacity: .5;
+}*/
+.login-btn{
+    width: 80%;
+    margin: 0 auto;
+    position: relative;
 }
-.loginwarrp .verifyimg{
-	height: 30px;
-    margin: 20px 0 0 20px;
+.login-btn input{
+    border-radius: 3px;
+    background: transparent;
+    border: 2px solid #4FA1D9;
+    color: #4FA1D9;
+    text-transform: uppercase;
+    font-size: 11px;
+    cursor: pointer;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+
+    margin: auto;
+    width: 80%;
+    transition-property: background,color;
+    -webkit-transition-duration: .2s;
+    transition-duration: .2s;
 }
-.loginwarrp .login-sub{
-	text-align: center;
-}
-.loginwarrp .login-sub input{
-	margin-top:15px;
-    background: #45B549;
-    line-height: 35px;
-    width: 150px;
-    color: #FFFFFF;
-    font-size: 16px;
-    font-family: 'Î¢ÈíÑÅºÚ','ÎÄÈªæäÕýºÚ','ºÚÌå';
-    border: none;
-    border-radius: 5px;
-}
-.loginwarrp .login_form .login-item .error{
-	color: #F00;
-	font-family: 'Î¢ÈíÑÅºÚ','ÎÄÈªæäÕýºÚ','ºÚÌå';
+.login-btn input:hover{
+    color: white !important;
+    background: #4FA1D9;
+    cursor: pointer;
+    -webkit-transition-property: background,color;
+    transition-property: background,color;
+    -webkit-transition-duration: .2s;
+    transition-duration: .2s;
 }

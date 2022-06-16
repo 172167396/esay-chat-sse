@@ -1,0 +1,75 @@
+input::-webkit-input-placeholder {
+    color: #aab2bd;
+    font-size: 12px;
+}
+
+
+input::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color: #aab2bd;
+}
+
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #aab2bd;
+}
+
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #aab2bd;
+}
+
+input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #aab2bd;
+}
+
+input::-ms-input-placeholder { /* Microsoft Edge */
+    color: #aab2bd;
+}
+
+.layui-tree-setHide {
+    min-height: 23px;
+    font-size: 15px;
+}
+
+.layui-tree-entry {
+    padding: 0 !important;
+    min-height: 23px !important;
+    line-height: 23px !important;
+}
+
+.layui-tree-entry {
+    text-align: left !important;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+.text-ell {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.boy {
+    background: url('/img/boy.png') no-repeat;
+}
+
+.girl {
+    background: url('/img/girl.png') no-repeat;
+}
+
+::-webkit-scrollbar {
+    background-color: rgba(27, 27, 27, .4);
+    border-radius: 10px;
+    width: 3px;
+    height: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: rgba(27, 27, 27, .4);
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: #fff;
+}

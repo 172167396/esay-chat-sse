@@ -1,7 +1,7 @@
 package com.easychat.sse.server;
 
 import com.easychat.sse.dao.MockUserDao;
-import com.easychat.sse.entity.UserEntity;
+import com.easychat.sse.model.entity.OldUserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.LongAdder;
 import java.util.function.Consumer;
 
 @Slf4j
@@ -21,12 +22,12 @@ public class SseEmitterServer {
     /**
      * 当前连接数
      */
-    private static AtomicInteger count = new AtomicInteger(0);
+    private static final LongAdder count = new LongAdder();
 
     /**
      * 使用map对象，便于根据userId来获取对应的SseEmitter，或者放redis里面
      */
-    private static Map<String, SseEmitter> sseEmitterMap = new ConcurrentHashMap<>();
+    private static final Map<String, SseEmitter> sseEmitterMap = new ConcurrentHashMap<>();
 
     /**
      * 创建用户连接并返回 SseEmitter
@@ -41,13 +42,8 @@ public class SseEmitterServer {
         sseEmitter.onCompletion(completionCallBack(userId));
         sseEmitter.onError(errorCallBack(userId));
         sseEmitter.onTimeout(timeoutCallBack(userId));
-        UserEntity userEntity = MockUserDao.userMap.get(userId);
-        if (userEntity == null) {
-            return null;
-        }
         sseEmitterMap.put(userId, sseEmitter);
-        // 数量+1
-        count.getAndIncrement();
+        count.increment();
         log.info("创建新的sse连接，当前用户：{}", userId);
         return sseEmitter;
     }
@@ -94,7 +90,7 @@ public class SseEmitterServer {
     public static void removeUser(String userId) {
         sseEmitterMap.remove(userId);
         // 数量-1
-        count.getAndDecrement();
+        count.decrement();
         log.info("移除用户：{}", userId);
     }
 
