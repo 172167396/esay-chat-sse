@@ -1,7 +1,7 @@
 package com.easychat.sse.model.dto;
 
 import com.easychat.sse.enums.ApplyState;
-import com.easychat.sse.model.entity.RequestOfFriend;
+import com.easychat.sse.model.entity.FriendApply;
 import com.easychat.sse.utils.IdUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,12 +19,13 @@ public class ApplyFriendArgs {
     private String remark;
 
 
-    public RequestOfFriend toEntity(String applyUserId){
-        RequestOfFriend entity = new RequestOfFriend();
+    public FriendApply toEntity(String applyUserId){
+        FriendApply entity = new FriendApply();
         entity.setId(IdUtils.getId());
         entity.setApplyUser(applyUserId);
         entity.setRemark(remark);
         entity.setReceiveUser(id);
+        entity.setGroupId(groupId);
         entity.setState(ApplyState.NOT_HANDLE.getState());
         return entity;
     }

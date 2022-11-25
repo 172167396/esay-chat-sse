@@ -1,0 +1,20 @@
+select[name='group-select'] {
+    width: 6em;
+    height: 1.5em;
+    border: 1px solid #c7c4c4;
+    border-radius: 2px;
+}
+
+.remarkNameDiv {
+    margin: 1em;
+}
+
+.groupDiv {
+    margin: 0.5em 1em 0.5em 1em
+}
+.input-nickName{
+    width: 9em;
+    height: 1.4em;
+    border: 1px solid #c4bdbd;
+    border-radius: 2px 2px;
+}

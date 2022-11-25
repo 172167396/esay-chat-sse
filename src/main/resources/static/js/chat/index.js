@@ -1,44 +1,63 @@
 let host = location.host;
 $(function () {
+    // $(document).on("click", "#recent-chat .chat-line", function (e) {
+    //     alert(e.target);
+    // });
     layui.use(['tree', 'dropdown', 'util'], function () {
         let tree = layui.tree
             , layer = layui.layer
             , util = layui.util,
             dropdown = layui.dropdown;
-        initFriendGroups(tree).then(function () {
-            initDropdown(dropdown);
-            clickGroup();
-        });
+        initRecentChat().then(data => {
+            //绑定聊天列表点击事件
+            bindChatClick();
+        })
+        // initFriendGroups(tree).then(data => {
+        //     initDropdown(dropdown);
+        //     clickGroup();
+        //     return data;
+        // }).then(data => {
+        //
+        //     tree.render({
+        //         elem: '#userGroups'
+        //         , data: data
+        //         , showLine: false  //是否开启连接线
+        //     });
+        // });
+        getFriendsAndRefreshGroup();
         bindAddBtn();
         registerAddBtnClick(layer);
+        bindSwitchBtnClick();
+
     });
 
 
-    let url = `http://${host}/connect/`;
-    let source = new EventSource(url);
-    source.onopen = function () {
-        console.log("connected.....");
-    };
+    // let url = `http://${host}/connect/`;
+    // let source = new EventSource(url);
+    // source.onopen = function () {
+    //     console.log("connected.....");
+    // };
 
-    source.addEventListener("message", function (e) {
-        let msgJson = JSON.parse(e.data);
-        let messageEntity = msgJson.message;
-        console.log(msgJson);
-        console.log(messageEntity);
-        // let users = msgJson.onlineUsers;
-        // let $people = $(".people");
-        // if (messageEntity.messageType === 1) {
-        //     renderUsers(users, $people);
-        // } else if (messageEntity.messageType === 2) {
-        //     renderMsg(messageEntity);
-        // } else if (messageEntity.messageType === 3) {
-        //     removeUser(messageEntity.createUserId);
-        // }
-        // choosePerson();
-    });
+    // source.addEventListener("message", function (e) {
+    //     let msgJson = JSON.parse(e.data);
+    //     let messageEntity = msgJson.message;
+    //     console.log(msgJson);
+    //     console.log(messageEntity);
+    //
+    //     // let users = msgJson.onlineUsers;
+    //     // let $people = $(".people");
+    //     // if (messageEntity.messageType === 1) {
+    //     //     renderUsers(users, $people);
+    //     // } else if (messageEntity.messageType === 2) {
+    //     //     renderMsg(messageEntity);
+    //     // } else if (messageEntity.messageType === 3) {
+    //     //     removeUser(messageEntity.createUserId);
+    //     // }
+    //     // choosePerson();
+    // });
     //监听enter
-    onEnter(sendMsg);
-    $(".send").click(sendMsg);
+    onEnter(null);
+    $(".send").click(null);
 
     let _beforeUnload_time = 0, _gap_time = 0;
     //是否是火狐浏览器
@@ -46,7 +65,7 @@ $(function () {
     window.onunload = function () {
         _gap_time = new Date().getTime() - _beforeUnload_time;
         if (_gap_time <= 5) {
-            $.get("/close/" + userId);
+            $.get("/close");
         }
         // else {
         //     //刷新
@@ -57,6 +76,94 @@ $(function () {
         _beforeUnload_time = new Date().getTime();
     };
 })
+
+
+function initRecentChat() {
+    return FetchUtil.get(ctx + "/chat/recent")
+        .then(r => {
+            if (r.code !== 200) {
+                layer.alert(r.msg);
+                return null;
+            }
+            let $recentChat = $("#recent-chat"), $chatTarget = "";
+            const $container = $recentChat.children('ul');
+            $.each(r.data, function (i, e) {
+                const $chatLine = $(`<li class="chat-line">
+                                <div class="${e.type}">
+                                    <div class="notice-msg relative">
+                                        <div class="sys-notice ${e.type === 'NOTICE' || '' ? 'show' : 'displayNone'}">
+                                        </div>
+                                        <div class="new-apply ${e.type === 'NEW_FRIEND' ? 'show' : 'displayNone'}">
+                                        </div>
+                                        <div class="recent-chat ${e.type === 'PERSONAL' ? 'show' : 'displayNone'}">
+                                            <img class="chat-avatar" src="${e.avatar ?? ''}">
+                                        </div>
+                                        <p id="nickName">${e.name}</p>
+                                        <p id="chatDate">${e.chatDate}</p>
+                                        <p id="short-desc">${e.briefMsg}</p>
+                                    </div>
+                                </div>
+                            </li>`);
+                $chatLine.data("id", e.targetId);
+                $chatLine.data("type", e.type);
+                $recentChat.append($chatLine);
+            })
+        })
+}
+
+function bindChatClick() {
+    let $recentChatLi = $("#recent-chat").children("li"), $iframe = $("#rightFrame");
+    $recentChatLi.each(function (i, e) {
+        let $this = $(e);
+        $this.click(function () {
+            let type = $this.data("type"), id = $this.data("id");
+            if (type === 'NEW_FRIEND') id = type;
+            $iframe.attr("src", ctx + "/chat/recent/" + id);
+        })
+    })
+
+}
+
+function getFriendsAndRefreshGroup() {
+    let $groupsUl = $("#groups");
+    FetchUtil.get(ctx + "/user/friends").then(res => {
+        if (res?.data) {
+            $.each(res.data, function (i, e) {
+                let tmp = `<li class="layui-nav-item">
+                            <a class="" href="javascript:;">${e.groupName}
+                            <i class="expand layui-icon layui-icon-triangle-r layui-nav-more"></i>
+                            </a>
+                            <dl class="layui-nav-child">
+                            ${e.users.map(item => {
+                    return `<dd><img class="avatarInGroup" src="${item.avatar}"><a class="inline-block" href="javascript:;">${item.name}</a></dd>`;
+                }).join('')
+                }</dl></li>`
+                const $li = $(tmp);
+                $groupsUl.append($li);
+            })
+        }
+    }).then(() => {
+        $groupsUl.append(`<span class="layui-nav-bar" style="top: 55px; height: 0; opacity: 0;"></span>`);
+        refreshNav();
+    });
+}
+
+function refreshNav() {
+    layui.use('element', function () {
+        let element = layui.element,
+            layFilter = $("#groups").attr('lay-filter');
+        element.render('nav', layFilter);
+    })
+}
+
+
+function showNewApply() {
+    let $applies = $(".applies"), $chats = $(".chats");
+    $(".new-apply").click(function () {
+        $chats.hide();
+        $applies.addClass("active");
+    })
+}
 
 function registerAddBtnClick(layer) {
     $(".addAction").click(function () {
@@ -107,6 +214,57 @@ function clickGroup() {
     })
 }
 
+function bindSwitchBtnClick() {
+    $(".switch-btn").find("li").click(function () {
+        let $this = $(this),
+            linkedClass = $this.data("link"),
+            $linkClass = $(`.${linkedClass}`);
+        $this.addClass("active");
+        $this.siblings().removeClass("active");
+        $linkClass.addClass("active");
+        $linkClass.siblings().removeClass("active");
+        //调整搜索框的div大小
+        if ($this.hasClass("chat-panel")) {
+            $(".top").addClass("search-adjust");
+            $(".to-do").addClass("active");
+        } else {
+            $(".top").removeClass("search-adjust");
+            $(".to-do").removeClass("active");
+        }
+    })
+}
+
+//参考json[{
+//     title: '江西'
+//     ,id: 1
+//     ,children: [{
+//       title: '南昌'
+//       ,id: 1000
+//       ,children: [{
+//         title: '青山湖区'
+//         ,id: 10001
+//       },{
+//         title: '高新区'
+//         ,id: 10002
+//       }]
+//     },{
+//       title: '九江'
+//       ,id: 1001
+//     },{
+//       title: '赣州'
+//       ,id: 1002
+//     }]
+//   },{
+//     title: '广西'
+//     ,id: 2
+//     ,children: [{
+//       title: '南宁'
+//       ,id: 2000
+//     },{
+//       title: '桂林'
+//       ,id: 2001
+//     }]
+//   }]
 function initFriendGroups(tree) {
     return getGroups().then(data => {
         tree.render({
@@ -118,48 +276,31 @@ function initFriendGroups(tree) {
         $(".layui-tree").find("i").each(function (i, e) {
             $(e).removeClass("layui-hide");
         });
+        return data;
     });
 }
 
 function initDropdown(dropdown) {
     //右键菜单
-    var inst = dropdown.render({
+    let inst = dropdown.render({
         elem: '#myGroups' //也可绑定到 document，从而重置整个右键
         , trigger: 'contextmenu' //contextmenu
         , isAllowSpread: false //禁止菜单组展开收缩
         , style: 'width: 200px' //定义宽度，默认自适应
         , id: 'test777' //定义唯一索引
         , data: [{
-            title: 'menu item 1'
+            title: '修改好友备注'
             , id: 'test'
         }, {
-            title: 'Printing'
+            title: '删除好友'
             , id: 'print'
-        }, {
-            title: 'Reload'
-            , id: 'reload'
         }, {type: '-'}, {
-            title: 'menu item 3'
+            title: '排序显示'
             , id: '#3'
             , child: [{
-                title: 'menu item 3-1'
+                title: '按名称排序'
                 , id: '#1'
-            }, {
-                title: 'menu item 3-2'
-                , id: '#2'
-            }, {
-                title: 'menu item 3-3'
-                , id: '#3'
             }]
-        }, {type: '-'}, {
-            title: 'menu item 4'
-            , id: ''
-        }, {
-            title: 'menu item 5'
-            , id: '#1'
-        }, {
-            title: 'menu item 6'
-            , id: '#1'
         }]
         , click: function (obj, othis) {
             if (obj.id === 'test') {

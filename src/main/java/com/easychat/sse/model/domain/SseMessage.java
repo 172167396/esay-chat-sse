@@ -7,5 +7,5 @@ public interface SseMessage {
 
     MessageType getMessageType();
 
-    MessageEntity toMessage();
+
 }

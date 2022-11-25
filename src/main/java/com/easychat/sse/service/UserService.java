@@ -1,10 +1,9 @@
 package com.easychat.sse.service;
 
-import com.easychat.sse.model.dto.ApplyFriendArgs;
-import com.easychat.sse.model.dto.IdName;
-import com.easychat.sse.model.dto.IdTitle;
-import com.easychat.sse.model.dto.SimpleUser;
+import com.easychat.sse.model.domain.UserDomain;
+import com.easychat.sse.model.dto.*;
 import com.easychat.sse.model.entity.UserEntity;
+import com.easychat.sse.model.vo.SimpleGroupVO;
 
 import java.util.List;
 
@@ -25,4 +24,7 @@ public interface UserService {
 
     void applyFriend(UserEntity user, ApplyFriendArgs applyFriendArgs);
 
+    UserDomain getUserDomainByAccount(String username);
+
+    List<SimpleGroupVO> findMyFriends(String userId, String id);
 }

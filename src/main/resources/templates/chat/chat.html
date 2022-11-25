@@ -1,0 +1,21 @@
+<html lang="zh_cn" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="header :: common_header(~{::title},~{::link},~{})">
+    <meta charset="UTF-8">
+    <title>聊天吹水</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/chat/reset.min.css">
+    <link rel="stylesheet" href="/css/chat/style.css">
+</head>
+<body>
+<div class="right chats">
+    <div class="sendToDiv"><span>To: <span class="name sendTo"></span></span></div>
+    <div class="write">
+        <a href="javascript:;" class="write-link attach"></a>
+        <input class="message" type="text"/>
+        <a href="javascript:;" class="write-link smiley"></a>
+        <a href="javascript:;" class="write-link send"></a>
+    </div>
+</div>
+<script th:src="@{/js/chat/chat.js}"></script>
+</body>
+</html>

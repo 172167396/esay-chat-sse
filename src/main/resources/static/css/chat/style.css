@@ -2,6 +2,10 @@
     box-sizing: border-box;
 }
 
+p:hover {
+    cursor: default;
+}
+
 :root {
     --white: #fff;
     --black: #000;
@@ -11,6 +15,11 @@
     --light: #e6e6e6;
     --wrapper: 1000px;
     --blue: #00b0ff;
+}
+
+.chat-avatar {
+    width: 100%;
+    height: 100%;
 }
 
 body {
@@ -38,7 +47,7 @@ body {
     position: relative;
     top: 50%;
     left: 50%;
-    width: 80%;
+    width: 85%;
     height: 75%;
     background-color: var(--white);
     -webkit-transform: translate(-50%, -50%);
@@ -47,7 +56,7 @@ body {
 
 .container .left {
     float: left;
-    width: 37.6%;
+    width: 33.6%;
     height: 100%;
     border: 1px solid var(--light);
     background-color: var(--white);
@@ -55,10 +64,85 @@ body {
     overflow-x: hidden;
 }
 
+.hide {
+    visibility: hidden !important;
+}
+
+.displayNone {
+    display: none !important;
+}
+
+.recent-chat {
+    width: 2.8em;
+    height: 2.8em;
+    opacity: 0.8;
+    display: inline-block;
+    float: left;
+    border-radius: 7px;
+    background-size: 70%;
+}
+
+#chatDate {
+    display: inline-block;
+    position: absolute;
+    top: 0.3em;
+    right: 0.5em;
+    color: gray;
+}
+
+.show {
+    visibility: visible !important;
+}
+
+.PERSONAL {
+    padding: 10px 0 10px 10px;
+}
+
 .left::-webkit-scrollbar {
     /*滚动条整体样式*/
     width: 4px; /*高宽分别对应横竖滚动条的尺寸*/
     height: 1px;
+}
+
+#sideScroll {
+    width: 100%;
+}
+
+#groups {
+    background-color: white !important;
+    width: 100%;
+}
+
+.layui-nav-itemed > a .layui-nav-more {
+    transform: rotate(90deg);
+}
+
+.layui-nav .layui-nav-more {
+    right: 22.2em !important;
+    color: #b2b1b1;
+}
+
+.avatarInGroup {
+    width: 2em;
+    height: 2em;
+    vertical-align: super;
+}
+
+dd.layui-this {
+    background-color: #ebebeb !important
+}
+
+dd.layui-this a {
+    background-color: #ebebeb !important
+}
+
+#groups li a {
+    color: black !important;
+
+}
+
+#groups li dl {
+    background-color: white !important;
 }
 
 .left::-webkit-scrollbar-thumb {
@@ -102,6 +186,7 @@ body {
     height: 80% !important;
 }
 
+
 .active-chat::-webkit-scrollbar {
     /*滚动条整体样式*/
     width: 4px; /*高宽分别对应横竖滚动条的尺寸*/
@@ -140,7 +225,7 @@ body {
     position: relative;
     width: 100%;
     height: 60px;
-    padding: 20px 0 0 0;
+    padding: 28px 0 0 0;
     line-height: 60px;
 }
 
@@ -274,11 +359,11 @@ body {
 .container .right {
     position: relative;
     float: left;
-    width: 62.4%;
+    width: 59.7%;
     height: 100%;
 }
 
-.container .right .top {
+.container .right .top, .sendToDiv {
     width: 100%;
     height: 47px;
     padding: 15px 29px;
@@ -604,7 +689,6 @@ li a {
 
 .layui-tab-content {
     height: 80% !important;
-    padding: 10px 0 0 5px !important;
 }
 
 .layui-tree-txt {
@@ -632,4 +716,175 @@ li a {
     height: 25px;
     line-height: 25px;
     cursor: pointer;
+}
+
+.left-side {
+    float: left;
+    width: 3.5em;
+}
+
+.left-side .avatarUrl {
+    width: 2.5em;
+    height: 2.5em;
+    border-radius: 7px;
+    margin-top: 1.8em;
+}
+
+.user-avatar {
+    text-align: center;
+}
+
+.switch-btn {
+    margin-top: 2.2em;
+}
+
+.switch-btn li {
+    width: 2em;
+    height: 2em;
+    margin: 1em auto;
+    background-size: 80%;
+}
+
+.chat-panel {
+    background: url("/img/chat-bubble.png") no-repeat;
+}
+
+.chat-panel.active {
+    background: url("/img/chat-bubble-visited.png") no-repeat;
+    background-size: 80%;
+}
+
+.group-panel {
+    background: url("/img/contacts.png") no-repeat;
+}
+
+.group-panel.active {
+    background: url("/img/contacts-visited.png") no-repeat;
+    background-size: 80%;
+}
+
+.chat-div {
+    display: none;
+}
+
+.chat-div.active {
+    display: inline-block;
+}
+
+.group-div {
+    display: none;
+    width: 100%;
+}
+
+.group-div.active {
+    display: inline-block;
+}
+
+.search-adjust {
+    height: 7em !important;
+    border-bottom: 1px solid #ddd7d7 !important;
+}
+
+.to-do {
+    display: none;
+    height: 60% !important;
+}
+
+.to-do span {
+    height: 2.8em !important;
+    line-height: 2.8em !important;
+}
+
+.to-do.active {
+    display: inline-block;
+}
+
+.to-do-icon {
+    display: inline-block;
+    width: 1.2em;
+    height: 1.2em;
+    text-align: center;
+    vertical-align: middle;
+    background: url("/img/to-do.png") no-repeat;
+    background-size: 100%;
+    margin-left: 1em;
+}
+
+.layui-tree {
+    height: 100%;
+}
+
+.sys-notice {
+    width: 2.8em;
+    height: 2.8em;
+    background: #4444ef url("/img/notice-solid.png") no-repeat center center;
+    opacity: 0.8;
+    display: inline-block;
+    float: left;
+    border-radius: 7px;
+    background-size: 70%;
+}
+
+.new-apply {
+    width: 2.8em;
+    height: 2.8em;
+    background: #4444ef url("/img/notice-solid.png") no-repeat center center;
+    opacity: 0.8;
+    display: inline-block;
+    float: left;
+    border-radius: 7px;
+    background-size: 70%;
+}
+
+.notice-msg {
+    width: 17.1em;
+    overflow: auto;
+}
+
+.notice-msg p {
+    font-size: 14px;
+}
+
+.gray {
+    color: #9b9898;
+}
+
+.relative {
+    position: relative;
+}
+
+.abs {
+    position: absolute;
+}
+
+#nickName, .nickName {
+    display: inline-block;
+    position: absolute;
+    top: 0.3em;
+    left: 3.7em;
+    font-weight: bold;
+}
+
+#short-desc, .remark {
+    display: inline-block;
+    position: absolute;
+    top: 1.9em;
+    left: 3.7em;
+    color: #9b9898;
+}
+
+.NEW_FRIEND {
+    padding: 0.5em 0 0.5em 0.6em
+}
+
+#recent-chat li:hover {
+    background-color: #f3f4f5;
+}
+
+.right.active {
+    display: inline-block;
+}
+
+.applies {
+    display: none;
 }

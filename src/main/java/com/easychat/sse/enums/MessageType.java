@@ -11,6 +11,6 @@ public enum MessageType {
     EMOJI("2","表情"),
     FILE("3","文件");
 
-    private String type;
-    private String name;
+    private final String type;
+    private final String name;
 }

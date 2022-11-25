@@ -1,4 +1,4 @@
-package com.easychat.sse.vo;
+package com.easychat.sse.model.vo;
 
 import lombok.Builder;
 import lombok.Getter;

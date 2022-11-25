@@ -4,29 +4,30 @@ import com.easychat.sse.config.MinioProperties;
 import com.easychat.sse.dao.UserMapper;
 import com.easychat.sse.event.RegisterEvent;
 import com.easychat.sse.exception.CustomRuntimeException;
-import com.easychat.sse.model.dto.ApplyFriendArgs;
-import com.easychat.sse.model.dto.IdName;
-import com.easychat.sse.model.dto.IdTitle;
-import com.easychat.sse.model.dto.SimpleUser;
+import com.easychat.sse.model.domain.UserDomain;
+import com.easychat.sse.model.dto.*;
 import com.easychat.sse.model.entity.UserEntity;
 import com.easychat.sse.model.entity.UserFriendGroup;
+import com.easychat.sse.model.vo.SimpleFriendVO;
+import com.easychat.sse.model.vo.SimpleGroupVO;
 import com.easychat.sse.service.ApplyFriendService;
 import com.easychat.sse.service.UserService;
 import com.easychat.sse.utils.ContextHolder;
 import com.easychat.sse.utils.IdUtils;
 import com.easychat.sse.utils.MD5Utils;
+import com.easychat.sse.utils.MinioUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.easychat.sse.constant.Constant.DEFAULT_GROUP;
 import static com.easychat.sse.constant.Constant.PASSWD_SECRET;
@@ -47,8 +48,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void login(String account, String password) {
-        Assert.notNull(account, "用户名不能为空");
-        Assert.notNull(password, "密码不能为空");
         UsernamePasswordToken token = new UsernamePasswordToken(account, MD5Utils.getMd5(PASSWD_SECRET + password), false);
         Subject subject = SecurityUtils.getSubject();
         try {
@@ -99,9 +98,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<SimpleUser> searchUser(String content) {
         List<SimpleUser> simpleUsers = userMapper.searchUser(content);
-        simpleUsers.forEach(user -> {
-            user.setMinioEndPoint(minioProperties.getEndPoint());
-        });
+        simpleUsers.forEach(user -> user.setMinioEndPoint(minioProperties.getEndPoint()));
         return simpleUsers;
     }
 
@@ -129,6 +126,45 @@ public class UserServiceImpl implements UserService {
             throw new CustomRuntimeException("该用户不存在");
         }
         //
+        if (user.getId().equals(applyFriendArgs.getId())) {
+            throw new CustomRuntimeException("无法添加自己");
+        }
         applyFriendService.save(applyFriendArgs.toEntity(user.getId()));
+
     }
+
+    @Override
+    public UserDomain getUserDomainByAccount(String username) {
+        return userMapper.getUserDomainByAccount(username);
+    }
+
+
+    @Override
+    public List<SimpleGroupVO> findMyFriends(String userId, String groupId) {
+        List<SimpleFriendDTO> friendDTOS = userMapper.findMyFriends(userId, groupId);
+        List<SimpleGroupVO> voList = new ArrayList<>();
+        if (friendDTOS.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Map<String, List<SimpleFriendDTO>> groupMap = friendDTOS.stream()
+                .collect(Collectors.groupingBy(SimpleFriendDTO::getGroupId));
+        groupMap.forEach((id, friends) -> {
+            SimpleGroupVO vo = new SimpleGroupVO();
+            vo.setId(id);
+            vo.setGroupName(friends.get(0).getGroupName());
+            List<SimpleFriendVO> collect = friends.stream().map(friendDTO -> {
+                        SimpleFriendVO simpleFriendVO = new SimpleFriendVO();
+                        simpleFriendVO.setId(friendDTO.getUserId());
+                        simpleFriendVO.setName(friendDTO.getDisplayName());
+                        simpleFriendVO.setAvatar(MinioUtil.buildPath(friendDTO.getBucket(), friendDTO.getFileName()));
+                        return simpleFriendVO;
+                    }).sorted(Comparator.comparing(SimpleFriendVO::getName, Comparator.nullsLast(Comparator.naturalOrder())))
+                    .collect(Collectors.toList());
+            vo.setUsers(collect);
+            voList.add(vo);
+        });
+        return voList;
+    }
+
+
 }

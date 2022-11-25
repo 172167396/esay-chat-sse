@@ -16,7 +16,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @Configuration
@@ -25,30 +27,22 @@ public class shiroConfig {
     @Resource
     RedisProperties redisProperties;
 
+    private final List<String> ignorePath = Arrays.asList("/login", "/user/register", "/register", "/user/checkRepeat", "/static/**", "/js/**", "/css/**", "/favicon.ico", "/img/**","/captcha");
+
     @Bean
     public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qualifier("securityManager") DefaultWebSecurityManager defaultWebSecurityManager) {
         ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
         shiroFilter.setSecurityManager(defaultWebSecurityManager);
         Map<String, String> filterMap = new LinkedHashMap<>();
 //        添加需要拦截的url，需要认证才能访问
-        filterMap.put("/login", "anon");
         filterMap.put("/logout", "logout");
-        filterMap.put("/user/register", "anon");
-        filterMap.put("/register", "anon");
-        filterMap.put("/user/checkRepeat", "anon");
-        filterMap.put("/static/**", "anon");
-        filterMap.put("/js/**", "anon");
-        filterMap.put("/css/**", "anon");
-        filterMap.put("/favicon.ico", "anon");
-        filterMap.put("/img/**", "anon");
+        ignorePath.forEach(path -> filterMap.put(path, "anon"));
         filterMap.put("/**", "authc");
-
         shiroFilter.setFilterChainDefinitionMap(filterMap);
         //认证（登录）界面
         shiroFilter.setLoginUrl("/login");
         shiroFilter.setUnauthorizedUrl("/login");
         shiroFilter.setSuccessUrl("/index");
-
         return shiroFilter;
     }
 

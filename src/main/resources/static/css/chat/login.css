@@ -1,16 +1,17 @@
-*{
+* {
     margin: 0;
     padding: 0;
 }
-.cavs{
-    z-index:1;
+
+.cavs {
+    z-index: 1;
     position: fixed;
-    width:95%;
+    width: 95%;
     margin-left: 20px;
     margin-right: 20px;
 }
 
-html,body{
+html, body {
     width: 100%;
     height: 100%;
     background: url("../../img/bg1.jpg") no-repeat;
@@ -19,8 +20,7 @@ html,body{
 }
 
 
-
-.loginmain{
+.loginmain {
     background: rgba(0, 0, 0, 0.5);
     width: 540px;
     height: 300px;
@@ -34,31 +34,36 @@ html,body{
     box-shadow: -15px 15px 15px rgba(6, 17, 47, 0.7);
     z-index: 99999;
 }
-.login-title{
+
+.login-title {
     color: #D3D7F7;
     height: 60px;
-    font-size:20px;
+    font-size: 20px;
     text-align: center;
     margin-top: -20px;
 }
-.login-con{
+
+.login-con {
     height: 208px;
     position: absolute;
     left: 0;
     width: 80%;
-    margin:0 10%;
+    margin: 0 10%;
 }
-.login-user{
+
+.login-user {
     position: relative;
 }
-.icon{
+
+.icon {
     position: absolute;
     z-index: 1;
     left: 36px;
     top: 8px;
     opacity: 1;
 }
-.login-con input{
+
+.login-con input {
     width: calc(100% - 130px);
     margin-top: -2px;
     background: rgba(57, 61, 82, 0);
@@ -73,9 +78,15 @@ html,body{
     box-shadow: none;
     color: #61BFFF !important;
 }
-.login-pwd, .login-yan{
+
+.login-pwd, .login-yan {
     position: relative;
 }
+
+.captcha {
+    width: 16em !important;
+}
+
 /*
 .login-pwd .icon{
     position: absolute;
@@ -84,12 +95,13 @@ html,body{
     top: 8px;
     opacity: .5;
 }*/
-.login-btn{
+.login-btn {
     width: 80%;
     margin: 0 auto;
     position: relative;
 }
-.login-btn input{
+
+.login-btn input {
     border-radius: 3px;
     background: transparent;
     border: 2px solid #4FA1D9;
@@ -104,16 +116,17 @@ html,body{
 
     margin: auto;
     width: 80%;
-    transition-property: background,color;
+    transition-property: background, color;
     -webkit-transition-duration: .2s;
     transition-duration: .2s;
 }
-.login-btn input:hover{
+
+.login-btn input:hover {
     color: white !important;
     background: #4FA1D9;
     cursor: pointer;
-    -webkit-transition-property: background,color;
-    transition-property: background,color;
+    -webkit-transition-property: background, color;
+    transition-property: background, color;
     -webkit-transition-duration: .2s;
     transition-duration: .2s;
 }

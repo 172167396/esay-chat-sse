@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:include="header :: common_header(~{::title},~{::link},~{})">
+    <meta charset="UTF-8">
+    <title>详情页</title>
+    <link rel="stylesheet" th:href="@{/css/chat/detail.css}">
+</head>
+<body>
+    <div class="container" th:if="${id != 'blank'}" th:data-id="${id}">
+        <div class="right">
+            <div class="top"><span>To: <span class="name sendTo"></span></span></div>
+            <div class="write">
+                <a href="javascript:;" class="write-link attach"></a>
+                <input class="message" type="text"/>
+                <a href="javascript:;" class="write-link smiley"></a>
+                <a href="javascript:;" class="write-link send"></a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

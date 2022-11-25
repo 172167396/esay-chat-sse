@@ -15,11 +15,12 @@
         <div class="layui-tab-item layui-show">
             <input class="searchInput" placeholder="请输入对方的账号或昵称">
             <button class="searchBtn" type="button" data-action="user">查找</button>
+            <div id="searchResult">
+            </div>
         </div>
         <div class="layui-tab-item">暂未实现</div>
     </div>
-    <div id="searchResult">
-    </div>
+
 </div>
 </body>
 <script th:src="@{/js/chat/searchUser.js}"></script>

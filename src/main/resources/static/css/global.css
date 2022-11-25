@@ -40,7 +40,7 @@ input::-ms-input-placeholder { /* Microsoft Edge */
 }
 
 .inline-block {
-    display: inline-block;
+    display: inline-block !important;
 }
 
 .text-ell {

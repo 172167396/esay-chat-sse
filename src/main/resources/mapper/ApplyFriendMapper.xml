@@ -2,12 +2,53 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.easychat.sse.dao.ApplyFriendMapper">
     <sql id="column">
-        id,apply_user,receive_user,state,remark
+        ${af}.id,
+        ${af}.apply_user,
+        ${af}.receive_user,
+        ${af}.group_id,
+        ${af}.state,
+        ${af}.remark,
+        ${af}.create_time
     </sql>
 
     <insert id="save">
-        insert into request_of_friend (<include refid="column"></include>)
-        values (#{id},#{applyUser},#{receiveUser},#{state},#{remark})
+        insert into friend_apply  (<include refid="column"><property name="af" value="friend_apply"/></include>)
+        values (#{id},#{applyUser},#{receiveUser},#{groupId},#{state},#{remark})
     </insert>
+
+    <update id="updateApplyState">
+        update friend_apply set state = #{state} where id = #{id}
+    </update>
+
+    <select id="getApply" resultType="com.easychat.sse.model.dto.FriendApplyDTO">
+        select
+        <include refid="column">
+            <property name="af" value="f"/>
+        </include>,
+            u.name userName,
+            fl.bucket,
+            fl.file_name
+        from friend_apply f
+        left join sys_user u on f.apply_user = u.id
+        left join sse_file fl on u.avatar_id = fl.id
+        where f.receive_user = #{value} order by f.create_time desc limit 1
+    </select>
+
+    <select id="getOwnerApplies" resultType="com.easychat.sse.model.dto.FriendApplyDTO">
+        select  <include refid="column"><property name="af" value="af"/></include>,u.name userName,
+            f.bucket,f.file_name
+            from friend_apply af
+        left join sys_user u on u.id = af.apply_user
+        left join sse_file f on u.avatar_id = f.id
+        where af.receive_user = #{value}
+    </select>
+
+    <select id="getApplyById" resultType="com.easychat.sse.model.entity.FriendApply">
+        select <include refid="column"><property name="af" value="af"/></include>
+            from friend_apply af where id = #{id}
+            <if test="receiveUser != null and receiveUser != ''">
+                and receive_user = #{receiveUser}
+            </if>
+    </select>
 
 </mapper>

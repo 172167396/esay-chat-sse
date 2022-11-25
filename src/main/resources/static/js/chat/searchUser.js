@@ -42,6 +42,7 @@ function bindApplyFunc() {
                 let $applyMsg = body.find(".apply-msg"),
                     $chooseGroup = body.find(".choose-group"),
                     $finish = body.find(".finish");
+                alert(body.find(".remark").val())
                 if ($applyMsg.is(":visible")) {
                     $applyMsg.hide();
                     //query group
@@ -91,16 +92,17 @@ function renderSearchedUsers(data) {
 }
 
 function adjustResultArea() {
-    let item = localStorage.getItem("searchPageIndex");
+    let item = localStorage.getItem("searchPageIndex"), $searchResult = $("#searchResult");
     $.changeFrameSize(item, "400px", () => {
-        $("#searchResult").height('16em')
+        $searchResult.height('17em');
+        $searchResult.css("padding-top", "0.6em").css("margin-top", "0.4em");
     });
 }
 
 function renderGroupSelect($select) {
-    return fetcher(ctx + "/user/group-list").then(data => {
-        if (data) {
-            $.each(data, function (i, e) {
+    return FetchUtil.get(ctx + "/user/group-list").then(data => {
+        if (data?.data) {
+            $.each(data.data, function (i, e) {
                 $select.append(`<option value="${e.id}">${e.name}</option>`)
             })
         }
@@ -115,11 +117,19 @@ function searchUser(content) {
 }
 
 function sendApply(body, id) {
-    return fetch(ctx + "/user/apply/" + id, {
+    alert(body.find(".remark").val())
+    return fetch(ctx + "/user/apply", {
+        method: 'POST',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencode'
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
         },
-        body: {id:id,groupId:body.find(".group-select").val(),nickName:body.find(".input-nickName").val(),}
+        body: JSON.stringify({
+            id: id,
+            groupId: body.find(".group-select").val(),
+            nickName: body.find(".input-nickName").val(),
+            remark: body.find(".remark").val()
+        })
     });
 }
 

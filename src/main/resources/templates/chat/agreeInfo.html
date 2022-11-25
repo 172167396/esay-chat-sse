@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:include="header :: common_header(~{::title},~{::link},~{})">
+    <meta charset="UTF-8">
+    <title>添加</title>
+    <link rel="stylesheet" th:href="@{/css/chat/agreeInfo.css}">
+</head>
+<body>
+<div class="root">
+    <div class="choose-group">
+        <div class="remarkNameDiv">
+            <span>备注姓名：</span><input class="input-nickName" autocomplete="off"/>
+        </div>
+        <div class="groupDiv">
+            <label>分&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;组：</label>
+            <div style="display: inline-block;margin-left: -3px;">
+                <select class="group-select" name="group-select">
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script th:inline="javascript">
+    const id = [[${id}]];
+</script>
+<script th:src="@{/js/chat/agreeInfo.js}"></script>
+</html>

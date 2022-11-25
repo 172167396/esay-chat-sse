@@ -1,13 +1,10 @@
 package com.easychat.sse.controller;
 
-import com.easychat.sse.model.dto.ApplyFriendArgs;
-import com.easychat.sse.model.dto.IdName;
-import com.easychat.sse.model.dto.IdTitle;
-import com.easychat.sse.model.dto.SimpleUser;
+import com.easychat.sse.model.dto.*;
 import com.easychat.sse.model.entity.UserEntity;
+import com.easychat.sse.model.vo.SimpleGroupVO;
 import com.easychat.sse.response.R;
 import com.easychat.sse.service.UserService;
-import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -77,14 +74,24 @@ public class UserController {
     }
 
     @PostMapping("/apply")
-    public R<Boolean> apply(@Valid ApplyFriendArgs applyFriendArgs) {
+    public R<Boolean> apply(@Valid @RequestBody ApplyFriendArgs applyFriendArgs) {
         userService.applyFriend(getUser(), applyFriendArgs);
         return R.success();
     }
 
 
     @GetMapping("/group-list")
-    public List<IdName> groupList() {
-        return userService.queryUserGroup(getUserId());
+    public R<List<IdName>> groupList() {
+        return R.success(userService.queryUserGroup(getUserId()));
+    }
+
+    /**
+     * groupId可传可不传
+     * @param id groupId
+     */
+    @GetMapping("/friends")
+    public R<List<SimpleGroupVO>> myFriends(@RequestParam(required = false) String id){
+        List<SimpleGroupVO> friends = userService.findMyFriends(getUserId(),id);
+        return R.success(friends);
     }
 }

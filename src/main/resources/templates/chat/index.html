@@ -12,16 +12,54 @@
         <input class="username" type="hidden" th:value="${username}">
     </div>
     <div class="container">
-        <div class="left" id="leftPanel">
-            <div class="top" style="position: relative">
+        <div class="left-side" id="left-side">
+            <div class="user-avatar">
+                <img class="avatarUrl" alt="" th:src="${userAvatar}">
+            </div>
+            <div>
+                <ul class="switch-btn">
+                    <li data-link="chat-div" class="chat-panel active"></li>
+                    <li data-link="group-div" class="group-panel"></li>
+                </ul>
+            </div>
+        </div>
+        <div class="left" id="leftPanel-group">
+            <div class="top search-adjust" style="position: relative">
                 <input type="text" placeholder="搜索"/>
-                <svg id="addBtn" style="margin: 0 0.3em 0 2em;cursor: pointer;" t="1654139334069" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2289" width="20" height="32"><path d="M512 512V170.666667h42.666667v341.333333h341.333333v42.666667h-341.333333v341.333333h-42.666667v-341.333333H170.666667v-42.666667h341.333333z" fill="#444444" p-id="2290"></path></svg>
+                <svg id="addBtn" style="margin: 0 0.3em 0 2em;cursor: pointer;" t="1654139334069" class="icon"
+                     viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2289" width="20"
+                     height="32">
+                    <path d="M512 512V170.666667h42.666667v341.333333h341.333333v42.666667h-341.333333v341.333333h-42.666667v-341.333333H170.666667v-42.666667h341.333333z"
+                          fill="#444444" p-id="2290"></path>
+                </svg>
+                <div style="" class="to-do active">
+                    <i class="to-do-icon"></i>
+                    <span style="display: inline-block;vertical-align: middle;margin-left: 3px;font-size: 14px;">待办：0</span>
+                </div>
                 <div id="addPanel" style="display: none">
                     <p id="addFriend" data-action="friend" class="addAction">加好友/加群</p>
                     <p id="createChatGroup" data-action="group" class="addAction">创建群聊</p>
                 </div>
             </div>
-            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <!--            聊天列表-->
+            <div class="chat-div active">
+                <div class="">
+                    <div id="recent-chat">
+                        <ul>
+                            <!--                            <li>-->
+                            <!--                                <div class="new-apply">-->
+                            <!--                                    <div class="notice-msg relative">-->
+                            <!--                                        <div class="sys-notice"></div>-->
+                            <!--                                        <p id="nickName">新朋友</p>-->
+                            <!--                                        <p id="short-desc">简爱申请添加你为好友</p>-->
+                            <!--                                    </div>-->
+                            <!--                                </div>-->
+                            <!--                            </li>-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div style="" class="layui-tab layui-tab-brief group-div" lay-filter="docDemoTabBrief">
                 <ul class="layui-tab-title">
                     <li class="layui-this">好友</li>
                     <li>群聊</li>
@@ -29,9 +67,16 @@
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
                         <div id="myGroups">
-                            <div class="layui-bg-gray" style="height: auto; text-align: center;">
-                                <div id="userGroups" class="demo-tree-more"></div>
+                            <!--                            <div class="" style="height: auto; text-align: center;">-->
+                            <!--                                <div id="userGroups" class="demo-tree-more"></div>-->
+                            <!--                            </div>-->
+                            <!--                            <div class="layui-side layui-bg-black">-->
+                            <div id="sideScroll" class="layui-side-scroll">
+
+                                <ul id="groups" class="layui-nav layui-nav-tree" lay-filter="test">
+                                </ul>
                             </div>
+                            <!--                            </div>-->
                         </div>
                     </div>
                     <div class="layui-tab-item">内容2</div>
@@ -40,14 +85,10 @@
             <ul class="people">
             </ul>
         </div>
-        <div class="right">
-            <div class="top"><span>To: <span class="name sendTo"></span></span></div>
-            <div class="write">
-                <a href="javascript:;" class="write-link attach"></a>
-                <input class="message" type="text"/>
-                <a href="javascript:;" class="write-link smiley"></a>
-                <a href="javascript:;" class="write-link send"></a>
-            </div>
+        <div class="right chats">
+            <iframe style="width: 100%;height: 100%;" id="rightFrame" th:src="@{/chat/recent/blank}">
+
+            </iframe>
         </div>
     </div>
 </div>
