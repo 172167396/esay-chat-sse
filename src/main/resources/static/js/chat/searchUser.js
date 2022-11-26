@@ -42,7 +42,6 @@ function bindApplyFunc() {
                 let $applyMsg = body.find(".apply-msg"),
                     $chooseGroup = body.find(".choose-group"),
                     $finish = body.find(".finish");
-                alert(body.find(".remark").val())
                 if ($applyMsg.is(":visible")) {
                     $applyMsg.hide();
                     //query group
@@ -52,7 +51,11 @@ function bindApplyFunc() {
                 if ($chooseGroup.is(":visible")) {
                     $chooseGroup.hide();
                     //
-                    sendApply(body, id).then(() => {
+                    sendApply(body, id).then((res) => {
+                        layero.find(".layui-layer-btn0").hide();
+                        if (res == null) {
+                            return;
+                        }
                         layero.find(".layui-layer-btn0").hide();
                         layero.find(".layui-layer-btn1").text("完成");
                         $finish.show();
@@ -69,13 +72,13 @@ function bindApplyFunc() {
 function renderSearchedUsers(data) {
     let $searchResult = $("#searchResult");
     $searchResult.empty();
-    if (!data || data.length === 0) {
+    if (!data || data?.data?.length === 0) {
         adjustResultArea();
         //没有找到符合搜索条件的用户
         $searchResult.append("<p style='vertical-align: middle;text-align: center;padding-top: 7em;'>没有找到符合搜索条件的用户</p>");
         return;
     }
-    $.each(data, function (i, e) {
+    $.each(data.data, function (i, e) {
         $searchResult.empty();
         $searchResult.append(`<div class="user inline-block">
                 <div class="avatarDiv inline-block">
@@ -111,25 +114,15 @@ function renderGroupSelect($select) {
 
 
 function searchUser(content) {
-    return fetch(ctx + "/user/search?content=" + encodeURIComponent(content))
-        .then(r => r.json())
-        .then(r => r.data);
+    return FetchUtil.get(ctx + "/user/search?content=" + encodeURIComponent(content));
 }
 
 function sendApply(body, id) {
-    alert(body.find(".remark").val())
-    return fetch(ctx + "/user/apply", {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            id: id,
-            groupId: body.find(".group-select").val(),
-            nickName: body.find(".input-nickName").val(),
-            remark: body.find(".remark").val()
-        })
+    return FetchUtil.post(ctx + "/user/apply", {
+        id: id,
+        groupId: body.find(".group-select").val(),
+        nickName: body.find(".input-nickName").val(),
+        remark: body.find(".remark").val()
     });
 }
 
