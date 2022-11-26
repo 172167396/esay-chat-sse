@@ -11,7 +11,6 @@ import com.easychat.sse.model.entity.UserRelation;
 import com.easychat.sse.model.vo.FriendApplyVO;
 import com.easychat.sse.service.ApplyFriendService;
 import com.easychat.sse.service.UserRelationService;
-import com.easychat.sse.service.UserService;
 import com.easychat.sse.utils.ContextHolder;
 import com.easychat.sse.utils.IdUtils;
 import lombok.extern.slf4j.Slf4j;

@@ -63,7 +63,7 @@ html, body {
 
 .userInfo button {
     border: none;
-    background: white;
+    background: transparent;
     color: #2976ff;
     margin-left: 1em;
     cursor: pointer;

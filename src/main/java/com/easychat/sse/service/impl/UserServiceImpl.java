@@ -1,5 +1,6 @@
 package com.easychat.sse.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.easychat.sse.config.MinioProperties;
 import com.easychat.sse.dao.UserMapper;
 import com.easychat.sse.event.RegisterEvent;
@@ -8,9 +9,11 @@ import com.easychat.sse.model.domain.UserDomain;
 import com.easychat.sse.model.dto.*;
 import com.easychat.sse.model.entity.UserEntity;
 import com.easychat.sse.model.entity.UserFriendGroup;
+import com.easychat.sse.model.entity.UserRelation;
 import com.easychat.sse.model.vo.SimpleFriendVO;
 import com.easychat.sse.model.vo.SimpleGroupVO;
 import com.easychat.sse.service.ApplyFriendService;
+import com.easychat.sse.service.UserRelationService;
 import com.easychat.sse.service.UserService;
 import com.easychat.sse.utils.ContextHolder;
 import com.easychat.sse.utils.IdUtils;
@@ -24,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
-
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,6 +42,8 @@ public class UserServiceImpl implements UserService {
     MinioProperties minioProperties;
     @Resource
     ApplyFriendService applyFriendService;
+    @Resource
+    UserRelationService userRelationService;
 
     @Override
     public UserEntity getUserByAccount(String userAccount) {
@@ -125,7 +129,13 @@ public class UserServiceImpl implements UserService {
         if (targetUser == null) {
             throw new CustomRuntimeException("该用户不存在");
         }
-        //
+        //好友已存在校验
+        long count = userRelationService.count(Wrappers.<UserRelation>lambdaQuery()
+                .eq(true, UserRelation::getUserId, user.getId())
+                .eq(true, UserRelation::getFriendId, targetUser.getId()));
+        if (count != 0) {
+            throw new CustomRuntimeException("该用户已经是您的好友，无法重复添加");
+        }
         if (user.getId().equals(applyFriendArgs.getId())) {
             throw new CustomRuntimeException("无法添加自己");
         }

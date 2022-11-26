@@ -135,7 +135,7 @@ function getFriendsAndRefreshGroup() {
                             </a>
                             <dl class="layui-nav-child">
                             ${e.users.map(item => {
-                    return `<dd><img class="avatarInGroup" src="${item.avatar}"><a class="inline-block" href="javascript:;">${item.name}</a></dd>`;
+                    return `<dd class="friend"><img class="avatarInGroup" src="${item.avatar}"><a class="friendName inline-block" href="javascript:;">${item.name}</a></dd>`;
                 }).join('')
                 }</dl></li>`
                 const $li = $(tmp);
