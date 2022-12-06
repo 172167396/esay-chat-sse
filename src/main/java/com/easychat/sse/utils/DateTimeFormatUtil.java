@@ -9,6 +9,7 @@ public class DateTimeFormatUtil {
     public static final DateTimeFormatter HM = DateTimeFormatter.ofPattern("HH:mm");
     public static final DateTimeFormatter MD = DateTimeFormatter.ofPattern("M-d");
     public static final DateTimeFormatter CN_DATE = DateTimeFormatter.ofPattern("yyyy年M月d天");
+    public static final DateTimeFormatter SLASH_DATE = DateTimeFormatter.ofPattern("yyyy/M/d HH:mm:ss");
 
     public static void main(String[] args) {
         System.out.println(LocalDateTime.now().format(MD));

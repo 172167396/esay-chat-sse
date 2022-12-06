@@ -13,8 +13,8 @@ public class MsgRecordEntity {
     private String id;
     private String content;
     private String senderId;
+    private int messageType;
     private String receiverId;
-    private String receiverType;
     private String fileId;
     private LocalDateTime createTime;
 }

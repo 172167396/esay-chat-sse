@@ -7,13 +7,13 @@ html, body {
 .container .right {
     width: 100%;
     height: 100%;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 .container .right .top {
-    width: 96%;
+    width: 97%;
     height: 2em;
-    padding: 15px 0 15px 15px;
+    padding: 15px 0 15px 17px;
     background-color: #eceff1;
 }
 
@@ -29,19 +29,52 @@ html, body {
 }
 
 .container .right .chat {
-    position: relative;
-    display: none;
     padding: 0 35px 0 35px;
-    border-width: 1px 1px 1px 0;
-    border-style: solid;
-    border-color: var(--light);
     height: calc(100% - 48px);
     justify-content: flex-end;
     flex-direction: column;
 }
 
+.active-chat {
+    overflow-y: scroll;
+    height: 80% !important;
+}
+
+
+.active-chat::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 4px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+}
+
+.active-chat::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 10px;
+    background-color: skyblue;
+    background-image: -webkit-linear-gradient(
+            45deg,
+            rgba(255, 255, 255, 0.2) 25%,
+            transparent 25%,
+            transparent 50%,
+            rgba(255, 255, 255, 0.2) 50%,
+            rgba(255, 255, 255, 0.2) 75%,
+            transparent 75%,
+            transparent
+    );
+}
+
+.active-chat::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #ededed;
+    border-radius: 10px;
+}
+
 .container .right .chat.active-chat {
-    display: block;
+    overflow-y: hidden;
+    max-height: 32em;
+    margin-bottom: -2em;
+    height: 32em !important;
 }
 
 .container .right .chat.active-chat .bubble {
@@ -99,10 +132,11 @@ html, body {
 }
 
 .container .right .write {
+    clear: both;
+    height: 3em;
     position: absolute;
-    bottom: 16px;
-    left: 30px;
-    height: 42px;
+    bottom: 2em;
+    left: 2em;
     padding-left: 8px;
     border: 1px solid var(--light);
     background-color: #eceff1;
@@ -167,6 +201,7 @@ html, body {
     padding: 13px 14px;
     vertical-align: top;
     border-radius: 5px;
+    line-height: 1em;
 }
 
 .container .right .bubble:before {
@@ -176,8 +211,16 @@ html, body {
     width: 8px;
     height: 6px;
     content: '\00a0';
-    -webkit-transform: rotate(29deg) skew(-35deg);
-    transform: rotate(29deg) skew(-35deg);
+}
+
+.container .right .bubble.me:before {
+    -webkit-transform: rotate(1deg) skew(-35deg);
+    transform: rotate(1deg) skew(-35deg);
+}
+
+.container .right .bubble.you:before {
+    -webkit-transform: rotate(54deg) skew(-35deg);
+    transform: rotate(54deg) skew(-35deg);
 }
 
 .container .right .bubble.you {
@@ -190,22 +233,37 @@ html, body {
 }
 
 .container .right .bubble.you:before {
-    left: -3px;
-    background-color: #eceff1;
+    left: -2px;
+    background-color: #f5f6f7;
+    top: 0.5px;
 }
 
 .container .right .bubble.me {
     float: right;
-    color: var(--white);
-    background-color: var(--blue);
+    color: white;
+    background-color: #1e6eff;
     align-self: flex-end;
     -webkit-animation-name: slideFromRight;
     animation-name: slideFromRight;
 }
 
 .container .right .bubble.me:before {
-    right: -3px;
-    background-color: var(--blue);
+    right: -2px;
+    background-color: #1e6eff;
+    top: 0;
+}
+
+.chat-panel {
+    background: url("/img/chat-bubble.png") no-repeat;
+}
+
+.chat-panel.active {
+    background: url("/img/chat-bubble-visited.png") no-repeat;
+    background-size: 80%;
+}
+
+.conversation-start {
+    margin-top: 10px;
 }
 
 .container .right .conversation-start {

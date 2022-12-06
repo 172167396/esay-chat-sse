@@ -7,7 +7,6 @@
             ${mr}.message_type,
             ${mr}.sender_id,
             ${mr}.receiver_id,
-            ${mr}.receiver_type,
             ${mr}.file_id,
             ${mr}.create_time
     </sql>

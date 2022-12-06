@@ -393,27 +393,7 @@ function choosePerson() {
     });
 }
 
-function sendMsg() {
-    let $active = $(".active-chat");
-    if ($active.length === 0) {
-        alert("请选择需要发送的对象!");
-        return;
-    }
-    let sendTo = $active.attr("data-id");
-    let $message = $(".message");
-    let message = $message.val();
-    if (message == null || message.length === 0) {
-        alert("请输入您要发送的消息!");
-        return;
-    }
-    $.get("/pushTo?message=" + message + "&id=" + sendTo + "&sender=" + userId);
-    let $sendTime = $active.children(".conversation-start");
-    if ($sendTime.length === 0) {
-        $active.append(`<div class="conversation-start"><span>${getDate(new Date())}</span></div>`);
-    }
-    $active.append(`<div class="bubble me">${message}</div>`);
-    $message.val("");
-}
+
 
 function renderMsg(messageEntity) {
     let msg = messageEntity.content;

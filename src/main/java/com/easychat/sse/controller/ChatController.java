@@ -1,9 +1,11 @@
 package com.easychat.sse.controller;
 
 import com.easychat.sse.enums.RecentMsgType;
+import com.easychat.sse.model.vo.MessageRecordVO;
 import com.easychat.sse.model.vo.RecentChatVO;
 import com.easychat.sse.response.R;
 import com.easychat.sse.service.ChatService;
+import com.easychat.sse.service.MessageRecordService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -12,12 +14,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.easychat.sse.shiro.ShiroUtil.getUserId;
+
 @RestController
 @RequestMapping("/chat")
 public class ChatController {
 
     @Resource
     ChatService chatService;
+    @Resource
+    MessageRecordService messageRecordService;
 
     @GetMapping("/recent")
     public R<List<RecentChatVO>> recentChat() {
@@ -38,5 +44,10 @@ public class ChatController {
         return new ModelAndView("chat/detail", param);
     }
 
+    @GetMapping("/records/{id}")
+    public R<List<MessageRecordVO>> getRecords(@PathVariable String id) {
+        List<MessageRecordVO> records = messageRecordService.getRecords(getUserId(), id);
+        return R.success(records);
+    }
 
 }
