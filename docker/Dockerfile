@@ -1,4 +1,4 @@
-FROM java:8
+FROM openjdk:8
 # 作者
 MAINTAINER dailu
 ENV MYPATH /home/socket-chat
