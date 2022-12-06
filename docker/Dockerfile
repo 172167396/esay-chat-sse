@@ -2,6 +2,14 @@ FROM java:8
 # 作者
 MAINTAINER dailu
 ENV MYPATH /home/socket-chat
+ARG dsUrl
+ARG dsName
+ARG dsPwd
+ARG redisHost
+ARG redisPwd
+ARG minioUrl
+ARG minioName
+ARG minioPwd
 WORKDIR $MYPATH
 # ADD 命令必须提供两个参数，第一个参数为：宿主机中的目录，相对于Dockerfile文件
 # 第二个参数为容器中的目录，相对于WORKDIR
@@ -13,4 +21,4 @@ VOLUME $MYPATH
 EXPOSE 10088
 # 运行jar包
 RUN bash -c 'touch ./sse-chat.jar'
-ENTRYPOINT ["java","-jar","./sse-chat.jar"]
+ENTRYPOINT ["java","-jar","-Dspring.datasource.url=$dsUrl -Dspring.datasource.username=$dsName -Dspring.datasource.password=$dsPwd -Dspring.redis.host=$redisHost -Dspring.redis.host=$redisPwd -Dminio.endpoint=$minioUrl -Dminio.accessKey=$minioName -Dminio.secretKey=$minioPwd","./sse-chat.jar"]
