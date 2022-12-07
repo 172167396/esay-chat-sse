@@ -13,6 +13,17 @@ ARG minioUrl
 ARG minioName
 ARG minioPwd
 
+ENV BUILDNAME=$buildName
+ENV DSURL=$dsUrl
+ENV DSNAME=$dsName
+ENV DSPWD=$dsPwd
+ENV REDISHOST=$redisHost
+ENV REDISPWD=$redisPwd
+ENV MINIOURL=$minioUrl
+ENV MINIONAME=$minioName
+ENV MINIOPWD=$minioPwd
+
+
 WORKDIR $MYPATH
 # ADD 命令必须提供两个参数，第一个参数为：宿主机中的目录，相对于Dockerfile文件
 # 第二个参数为容器中的目录，相对于WORKDIR
