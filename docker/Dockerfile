@@ -3,15 +3,15 @@ FROM openjdk:8
 MAINTAINER dailu
 ENV MYPATH /home/socket-chat
 
-ARG buildName
-ARG dsUrl
-ARG dsName
-ARG dsPwd
-ARG redisHost
-ARG redisPwd
-ARG minioUrl
-ARG minioName
-ARG minioPwd
+ENV buildName ${buildName}
+ENV dsUrl ${dsUrl}
+ENV dsName ${dsName}
+ENV dsPwd ${dsPwd}
+ENV redisHost ${redisHost}
+ENV redisPwd ${redisPwd}
+ENV minioUrl ${minioUrl}
+ENV minioName ${minioName}
+ENV minioPwd ${minioPwd}
 WORKDIR $MYPATH
 # ADD 命令必须提供两个参数，第一个参数为：宿主机中的目录，相对于Dockerfile文件
 # 第二个参数为容器中的目录，相对于WORKDIR
@@ -25,4 +25,4 @@ EXPOSE 10088
 # 运行jar包
 RUN bash -c 'touch ./sse-chat.jar'
 
-ENTRYPOINT ["sh","-c","java -Dspring.datasource.url=\"$dsUrl\" -Dspring.datasource.username=$dsName -Dspring.datasource.password=$dsPwd -Dspring.redis.host=$redisHost -Dspring.redis.password=$redisPwd -Dminio.endpoint=\"$minioUrl\" -Dminio.accessKey=$minioName -Dminio.secretKey=$minioPwd -jar ./sse-chat.jar"]
+ENTRYPOINT java -Dspring.datasource.url="$dsUrl" -Dspring.datasource.username=$dsName -Dspring.datasource.password=$dsPwd -Dspring.redis.host=$redisHost -Dspring.redis.password=$redisPwd -Dminio.endpoint="$minioUrl" -Dminio.accessKey=$minioName -Dminio.secretKey=$minioPwd -jar ./sse-chat.jar
