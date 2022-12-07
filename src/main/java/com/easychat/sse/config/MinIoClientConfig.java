@@ -15,6 +15,9 @@ public class MinIoClientConfig {
     @Resource
     MinioProperties minioProperties;
 
+    @Value("${spring.datasource.url}")
+    private String url;
+
     /**
      * 注入minio 客户端
      *
@@ -22,7 +25,8 @@ public class MinIoClientConfig {
      */
     @Bean
     public MinioClient minioClient() {
-        log.info("minio url is:{},accessKey is: {},secretKey is: {}",minioProperties.getEndPoint(),minioProperties.getAccessKey(),minioProperties.getSecretKey());
+        log.info("datasource url is:{}", url);
+        log.info("minio url is:{},accessKey is: {},secretKey is: {}", minioProperties.getEndPoint(), minioProperties.getAccessKey(), minioProperties.getSecretKey());
         return MinioClient.builder()
                 .endpoint(minioProperties.getEndPoint())
                 .credentials(minioProperties.getAccessKey(), minioProperties.getSecretKey())
