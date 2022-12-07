@@ -1,8 +1,18 @@
+ENV MINIO_SECRET_KEY $MINIO_SECRET_KEY
+ARG buildName
+ARG dsUrl
+ARG dsName
+ARG dsPwd
+ARG redisHost
+ARG redisPwd
+ARG minioUrl
+ARG minioName
+ARG minioPwd
 FROM openjdk:8
 # 作者
 MAINTAINER dailu
 ENV MYPATH /home/socket-chat
-ENV MINIO_SECRET_KEY $MINIO_SECRET_KEY
+
 ARG buildName
 ARG dsUrl
 ARG dsName
