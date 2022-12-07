@@ -33,4 +33,5 @@ RUN echo "-Dspring.datasource.url=\"$dsUrl\" -Dspring.datasource.username=$dsNam
 EXPOSE 10088
 # 运行jar包
 RUN bash -c 'touch ./sse-chat.jar'
-CMD ["java", "-Dspring.datasource.url=\"$dsUrl\"", "-Dspring.datasource.username=$dsName", "-Dspring.datasource.password=$dsPwd", "-Dspring.redis.host=$redisHost", "-Dspring.redis.password=$redisPwd", "-Dminio.endpoint=$minioUrl", "-Dminio.accessKey=$minioName", "-Dminio.secretKey=$minioPwd", "-jar", "./sse-chat.jar"]
+
+ENTRYPOINT ["sh","-c","java -Dspring.datasource.url=\"$dsUrl\" -Dspring.datasource.username=$dsName -Dspring.datasource.password=$dsPwd -Dspring.redis.host=$redisHost -Dspring.redis.password=$redisPwd -Dminio.endpoint=\"$minioUrl\" -Dminio.accessKey=$minioName -Dminio.secretKey=$minioPwd -jar ./sse-chat.jar"]
