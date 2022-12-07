@@ -3,15 +3,16 @@ FROM openjdk:8
 MAINTAINER dailu
 ENV MYPATH /home/socket-chat
 
-ENV buildName ${buildName}
-ENV dsUrl ${dsUrl}
-ENV dsName ${dsName}
-ENV dsPwd ${dsPwd}
-ENV redisHost ${redisHost}
-ENV redisPwd ${redisPwd}
-ENV minioUrl ${minioUrl}
-ENV minioName ${minioName}
-ENV minioPwd ${minioPwd}
+ARG buildName
+ARG dsUrl
+ARG dsName
+ARG dsPwd
+ARG redisHost
+ARG redisPwd
+ARG minioUrl
+ARG minioName
+ARG minioPwd
+
 WORKDIR $MYPATH
 # ADD 命令必须提供两个参数，第一个参数为：宿主机中的目录，相对于Dockerfile文件
 # 第二个参数为容器中的目录，相对于WORKDIR
