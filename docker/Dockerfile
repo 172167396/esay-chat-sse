@@ -2,6 +2,7 @@ FROM openjdk:8
 # 作者
 MAINTAINER dailu
 ENV MYPATH /home/socket-chat
+ENV MINIO_SECRET_KEY $MINIO_SECRET_KEY
 ARG buildName
 ARG dsUrl
 ARG dsName
@@ -22,4 +23,4 @@ VOLUME $MYPATH
 EXPOSE 10088
 # 运行jar包
 RUN bash -c 'touch ./sse-chat.jar'
-ENTRYPOINT ["java","-jar","-Dspring.datasource.url=${dsUrl} -Dspring.datasource.username=${dsName} -Dspring.datasource.password=${dsPwd} -Dspring.redis.host=${redisHost} -Dspring.redis.password=${redisPwd} -Dminio.endpoint=${minioUrl} -Dminio.accessKey=${minioName} -Dminio.secretKey=${minioPwd}","./sse-chat.jar"]
+ENTRYPOINT ["java","-jar","-Dspring.datasource.url=\"$dsUrl\" -Dspring.datasource.username=$dsName -Dspring.datasource.password=$dsPwd -Dspring.redis.host=$redisHost -Dspring.redis.password=\"$redisPwd\" -Dminio.endpoint=$minioUrl -Dminio.accessKey=$minioName -Dminio.secretKey=$minioPwd","./sse-chat.jar"]
