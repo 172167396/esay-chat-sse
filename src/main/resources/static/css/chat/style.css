@@ -82,7 +82,7 @@ body {
     background-size: 70%;
 }
 
-#chatDate {
+.chatDate {
     display: inline-block;
     position: absolute;
     top: 0.3em;
@@ -154,7 +154,7 @@ dd.layui-this a {
     background-color: white !important;
 }
 
-.friendName{
+.friendName {
     padding-left: 5px !important;
     width: 87%;
 }
@@ -730,7 +730,7 @@ li a {
     position: absolute;
 }
 
-#nickName, .nickName {
+.nickName {
     display: inline-block;
     position: absolute;
     top: 0.3em;
@@ -738,12 +738,40 @@ li a {
     font-weight: bold;
 }
 
-#short-desc, .remark {
+.short-desc, .remark {
     display: inline-block;
     position: absolute;
     top: 1.9em;
     left: 3.7em;
     color: #9b9898;
+}
+
+.emptyDl {
+    height: 0;
+    padding: 0;
+}
+
+.notRead {
+    position: absolute;
+    right: 12px;
+    bottom: 5px;
+    font-size: 14px;
+    color: white;
+    background: red;
+    border-radius: 50% 50%;
+    display: block;
+    width: 1.3em;
+    height: 1.3em;
+    line-height: 1.3em;
+    text-align: center;
+}
+
+.overflowEllips {
+    max-height: 1.5em;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 13em;
 }
 
 .NEW_FRIEND {

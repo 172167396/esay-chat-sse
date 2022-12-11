@@ -162,18 +162,26 @@ public class UserServiceImpl implements UserService {
             SimpleGroupVO vo = new SimpleGroupVO();
             vo.setId(id);
             vo.setGroupName(friends.get(0).getGroupName());
-            List<SimpleFriendVO> collect = friends.stream().map(friendDTO -> {
-                        SimpleFriendVO simpleFriendVO = new SimpleFriendVO();
-                        simpleFriendVO.setId(friendDTO.getUserId());
-                        simpleFriendVO.setName(friendDTO.getDisplayName());
-                        simpleFriendVO.setAvatar(MinioUtil.buildPath(friendDTO.getBucket(), friendDTO.getFileName()));
-                        return simpleFriendVO;
-                    }).sorted(Comparator.comparing(SimpleFriendVO::getName, Comparator.nullsLast(Comparator.naturalOrder())))
-                    .collect(Collectors.toList());
-            vo.setUsers(collect);
+            String uId = friends.get(0).getId();
+            if (uId != null) {
+                List<SimpleFriendVO> collect = friends.stream().map(friendDTO -> {
+                            SimpleFriendVO simpleFriendVO = new SimpleFriendVO();
+                            simpleFriendVO.setId(friendDTO.getUserId());
+                            simpleFriendVO.setName(friendDTO.getDisplayName());
+                            simpleFriendVO.setAvatar(MinioUtil.buildPath(friendDTO.getBucket(), friendDTO.getFileName()));
+                            return simpleFriendVO;
+                        }).sorted(Comparator.comparing(SimpleFriendVO::getName, Comparator.nullsLast(Comparator.naturalOrder())))
+                        .collect(Collectors.toList());
+                vo.setUsers(collect);
+            }
             voList.add(vo);
         });
         return voList;
+    }
+
+    @Override
+    public String getFirstGroupId(String applyUser) {
+        return userMapper.getFirstGroupId(applyUser);
     }
 
 

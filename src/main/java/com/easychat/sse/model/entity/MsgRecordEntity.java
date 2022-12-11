@@ -16,5 +16,6 @@ public class MsgRecordEntity {
     private int messageType;
     private String receiverId;
     private String fileId;
+    private String belongRecentId;
     private LocalDateTime createTime;
 }

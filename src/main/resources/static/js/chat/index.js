@@ -1,4 +1,4 @@
-let host = location.host;
+let host = location.host, $rightFrame = $("#rightFrame");
 $(function () {
     // $(document).on("click", "#recent-chat .chat-line", function (e) {
     //     alert(e.target);
@@ -24,7 +24,9 @@ $(function () {
         //         , showLine: false  //是否开启连接线
         //     });
         // });
+        //好友列表
         getFriendsAndRefreshGroup();
+        //加好友/加群
         bindAddBtn();
         registerAddBtnClick(layer);
         bindSwitchBtnClick();
@@ -55,9 +57,7 @@ $(function () {
     //     // }
     //     // choosePerson();
     // });
-    //监听enter
-    onEnter(null);
-    $(".send").click(null);
+
 
     let _beforeUnload_time = 0, _gap_time = 0;
     //是否是火狐浏览器
@@ -88,7 +88,7 @@ function initRecentChat() {
             let $recentChat = $("#recent-chat"), $chatTarget = "";
             const $container = $recentChat.children('ul');
             $.each(r.data, function (i, e) {
-                const $chatLine = $(`<li class="chat-line">
+                const $chatLine = $(`<li class="chat-line" id="${e.targetId}">
                                 <div class="${e.type}">
                                     <div class="notice-msg relative">
                                         <div class="sys-notice ${e.type === 'NOTICE' || '' ? 'show' : 'displayNone'}">
@@ -98,29 +98,39 @@ function initRecentChat() {
                                         <div class="recent-chat ${e.type === 'PERSONAL' ? 'show' : 'displayNone'}">
                                             <img class="chat-avatar" src="${e.avatar ?? ''}">
                                         </div>
-                                        <p id="nickName">${e.name}</p>
-                                        <p id="chatDate">${e.chatDate}</p>
-                                        <p id="short-desc">${e.briefMsg}</p>
+                                        <p class="nickName overflowEllips">${e.name}</p>
+                                        <p class="chatDate">${e.chatDate}</p>
+                                        <span class="notRead hide"></span>
+                                        <p class="short-desc overflowEllips" title="${e.briefMsg}">${e.briefMsg}</p>
                                     </div>
                                 </div>
                             </li>`);
                 $chatLine.data("id", e.targetId);
                 $chatLine.data("type", e.type);
-                $recentChat.append($chatLine);
+                $container.append($chatLine);
             })
         })
 }
 
 function bindChatClick() {
-    let $recentChatLi = $("#recent-chat").children("li"), $iframe = $("#rightFrame");
-    $recentChatLi.each(function (i, e) {
-        let $this = $(e);
-        $this.click(function () {
-            let type = $this.data("type"), id = $this.data("id");
-            if (type === 'NEW_FRIEND') id = type;
-            $iframe.attr("src", ctx + "/chat/recent/" + id);
-        })
+    let $recentChatLi = $("#recent-chat").find("li");
+    $(document).on('click',".chat-line",function(){
+        let $this = $(this);
+        let $unReadSpan = $recentChatLi.find(".notRead"),
+            type = $this.data("type"),
+            id = $this.data("id");
+        if (type === 'NEW_FRIEND') id = type;
+        $unReadSpan.text("");
+        $unReadSpan.addClass("hide");
+        $rightFrame.attr("data-id", id);
+        $rightFrame.attr("src", ctx + "/chat/recent/" + id);
     })
+    // $recentChatLi.each(function (i, e) {
+    //
+    //     $this.click(function () {
+    //
+    //     })
+    // })
 
 }
 
@@ -133,18 +143,22 @@ function getFriendsAndRefreshGroup() {
                             <a class="" href="javascript:;">${e.groupName}
                             <i class="expand layui-icon layui-icon-triangle-r layui-nav-more"></i>
                             </a>
-                            <dl class="layui-nav-child">
-                            ${e.users.map(item => {
-                    return `<dd class="friend"><img class="avatarInGroup" src="${item.avatar}"><a class="friendName inline-block" href="javascript:;">${item.name}</a></dd>`;
-                }).join('')
+                            <dl class="layui-nav-child ${!e.users ? 'emptyDl' : ''}">
+                            ${e.users?.length > 0 ? e.users.map(item => {
+                    return `<dd class="friend" data-id="${item.id}"><img class="avatarInGroup" src="${item.avatar}"><a class="friendName inline-block" href="javascript:;">${item.name}</a></dd>`;
+                }).join('') : ''
                 }</dl></li>`
                 const $li = $(tmp);
+                if (e.users?.length < 1) {
+                    $li.find('.layui-nav-child').addClass("emptyDl");
+                }
                 $groupsUl.append($li);
             })
         }
     }).then(() => {
         $groupsUl.append(`<span class="layui-nav-bar" style="top: 55px; height: 0; opacity: 0;"></span>`);
         refreshNav();
+        bindUserClick();
     });
 }
 
@@ -153,6 +167,14 @@ function refreshNav() {
         let element = layui.element,
             layFilter = $("#groups").attr('lay-filter');
         element.render('nav', layFilter);
+    })
+}
+
+function bindUserClick() {
+    $("dd.friend").click(function () {
+        let id = $(this).data("id");
+        $rightFrame.attr("data-id", id);
+        $rightFrame.attr("src", ctx + "/chat/recent/" + id);
     })
 }
 
@@ -207,12 +229,6 @@ function bindAddBtn() {
     })
 }
 
-function clickGroup() {
-    let $group = $(".layui-tree-main");
-    $group.click(function () {
-        $(this).find("i").toggleClass("layui-tree-iconArrow-down");
-    })
-}
 
 function bindSwitchBtnClick() {
     $(".switch-btn").find("li").click(function () {
@@ -234,51 +250,6 @@ function bindSwitchBtnClick() {
     })
 }
 
-//参考json[{
-//     title: '江西'
-//     ,id: 1
-//     ,children: [{
-//       title: '南昌'
-//       ,id: 1000
-//       ,children: [{
-//         title: '青山湖区'
-//         ,id: 10001
-//       },{
-//         title: '高新区'
-//         ,id: 10002
-//       }]
-//     },{
-//       title: '九江'
-//       ,id: 1001
-//     },{
-//       title: '赣州'
-//       ,id: 1002
-//     }]
-//   },{
-//     title: '广西'
-//     ,id: 2
-//     ,children: [{
-//       title: '南宁'
-//       ,id: 2000
-//     },{
-//       title: '桂林'
-//       ,id: 2001
-//     }]
-//   }]
-function initFriendGroups(tree) {
-    return getGroups().then(data => {
-        tree.render({
-            elem: '#userGroups'
-            , data: data
-            , showLine: false  //是否开启连接线
-        });
-        //不知道为啥arrow没了
-        $(".layui-tree").find("i").each(function (i, e) {
-            $(e).removeClass("layui-hide");
-        });
-        return data;
-    });
-}
 
 function initDropdown(dropdown) {
     //右键菜单
@@ -326,11 +297,6 @@ function getGroups() {
         })
 }
 
-function removeUser(id) {
-    $(`li[data-id='${id}']`).remove();
-    $(".sendTo").text("");
-    $(`#${id}`).remove();
-}
 
 function getDate(dt) {
     let year = dt.getFullYear();
@@ -357,42 +323,6 @@ function getDate(dt) {
 
     return year + "-" + buWei(month) + "-" + buWei(day) + " " + buWei(hour) + ":" + buWei(minute) + ":" + buWei(second);
 }
-
-
-function choosePerson() {
-    let $chat = $(".chat");
-    $(".person").bind("click", function () {
-        if ($chat.length > 0) {
-            $(".chat").each(function (index, ele) {
-                $(ele).removeClass("active");
-                $(ele).removeClass("active-chat");
-            });
-        }
-        let $this = $(this);
-        let $unRead = $this.children(".notRead");
-        let id = $this.attr("data-id");
-        $(".sendTo").text($this.attr("data-name"));
-        $unRead.text("");
-        $unRead.removeClass("unRead");
-        let chatPage = $(`#${id}`);
-        if (chatPage.length > 0) {
-            chatPage.addClass("active active-chat");
-        } else {
-            let $content = "";
-            // find record
-            $.get("/findRecord?userId=" + userId + "&choseId=" + id, function (res) {
-                $.each(res, function (index, e) {
-                    if (index === 0) {
-                        $content += `<div class="conversation-start"><span>${e.sendTime}</span></div>`;
-                    }
-                    $content += `<div class="bubble ${e.createUserId === userId ? 'me' : 'you'}">${e.content}</div>`;
-                })
-                $(".write").before(`<div class="chat active active-chat" id="${id}" data-id="${id}">${$content}</div>`);
-            })
-        }
-    });
-}
-
 
 
 function renderMsg(messageEntity) {
@@ -430,20 +360,7 @@ function renderMsg(messageEntity) {
     $unRead.text(c);
 }
 
-function renderUsers(users, userTab) {
-    let others = [...users].filter(u => u.id !== userId);
-    userTab.empty();
-    $.each(others, function (index, ele) {
-        let userInfo = `<li data-id="${ele.id}" data-name="${ele.account}" class="person" data-chat="person${index}">
-                    <img src="img/${ele.avatar}" alt="" />
-                    <span class="name">${ele.account}</span>
-                    <span class="time">${ele.loginTime}</span>
-                    <span class="notRead"></span>
-                    <span class="preview">${ele.lastPush ?? ""}</span>
-                </li>`;
-        userTab.append(userInfo);
-    })
-}
+
 
 
 

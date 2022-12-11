@@ -13,7 +13,14 @@ public class FriendApply {
     private String receiveUser;
     private String groupId;
     private int state;
+    /**
+     * 验证信息
+     */
     private String remark;
+    /**
+     * 备注
+     */
+    private String nickName;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
 }

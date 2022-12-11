@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easychat.sse.dao.ChatMapper">
+    <sql id="column">
+            ${rc}.id,
+            ${rc}.type,
+            ${rc}.user_id,
+            ${rc}.last_active_time,
+            ${rc}.target_id,
+            ${rc}.create_time
+    </sql>
+
+    <insert id="insertDuplicate">
+        insert into recent_chat (<include refid="column"><property name="rc" value="recent_chat"/></include>)
+        value (#{id},#{type},#{userId},#{lastActiveTime},#{targetId},#{createTime}) on DUPLICATE key update recent_chat.last_active_time = now()
+    </insert>
+
+    <update id="updateLastActiveTime">
+        update recent_chat set last_active_time = now() where id = #{value}
+    </update>
+
+    <select id="getRecentChat" resultType="com.easychat.sse.model.dto.RecentChatDTO">
+        SELECT
+                    u.`name` targetUserName,
+                    u.id targetId,
+                    u.avatar_path,
+                    r.content briefMsg,
+                    rc.last_active_time
+                FROM
+                    recent_chat rc
+                        LEFT JOIN sys_user u ON rc.target_id = u.id
+                        LEFT JOIN (
+                        SELECT
+                            max(create_time),
+                            belong_recent_id,
+                            content
+                        FROM
+                            message_record
+                        GROUP BY
+                            belong_recent_id,
+                            content
+                        ORDER BY
+                            create_time DESC
+                            LIMIT 1
+                    ) r ON r.belong_recent_id = rc.id
+                WHERE
+                    rc.user_id = #{value}
+                UNION
+                SELECT
+                    u.`name` targetUserName,
+                    u.id targetId,
+                    u.avatar_path,
+                    r.content briefMsg,
+                    rc.last_active_time
+                FROM
+                    recent_chat rc
+                        LEFT JOIN sys_user u ON rc.user_id = u.id
+                        LEFT JOIN (
+                        SELECT
+                            max(create_time),
+                            belong_recent_id,
+                            content
+                        FROM
+                            message_record
+                        GROUP BY
+                            belong_recent_id,
+                            content
+                        ORDER BY
+                            create_time DESC
+                            LIMIT 1
+                    ) r ON r.belong_recent_id = rc.id
+                WHERE
+                    rc.target_id = #{value}
+    </select>
+
+    <select id="getByUserAndTarget" resultType="com.easychat.sse.model.entity.RecentChat">
+        select <include refid="column"><property name="rc" value="rc"/></include> from recent_chat rc where user_id = #{userId}
+        and target_id = #{targetId}
+    </select>
+
+
+</mapper>

@@ -1,27 +1,36 @@
 package com.easychat.sse.server;
 
+import cn.hutool.core.net.URLDecoder;
 import com.easychat.sse.config.WebsocketAutoConfig;
 import com.easychat.sse.exception.CustomRuntimeException;
+import com.easychat.sse.model.domain.SseMessage;
+import com.easychat.sse.model.dto.SimpleFriendDTO;
 import com.easychat.sse.model.dto.SocketMessage;
 import com.easychat.sse.model.dto.TextMessage;
 import com.easychat.sse.service.UserRelationService;
 import com.easychat.sse.utils.ContextHolder;
 import com.easychat.sse.utils.DateTimeFormatUtil;
+import com.easychat.sse.utils.MinioUtil;
 import com.easychat.sse.utils.ObjectMapperUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.mgt.SecurityManager;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
-import javax.annotation.Resource;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static com.easychat.sse.utils.DateTimeFormatUtil.getChatLineDisplayDate;
 
 
 @Slf4j
@@ -29,13 +38,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @ServerEndpoint(value = "/connect", configurator = WebsocketAutoConfig.class)
 public class WebSocketServer {
 
+    private static ApplicationContext applicationContext;
 
-    private final Map<String, Session> sessions = new ConcurrentHashMap<>(500);
+
 
     @OnOpen
     public void onOpen(Session session) {
         String userId = (String) session.getUserProperties().get("userId");
-        sessions.putIfAbsent(userId, session);
+        SessionUtil.putIfAbsent(userId, session);
         log.info("客户端：{}连接成功", session.getId());
     }
 
@@ -43,7 +53,7 @@ public class WebSocketServer {
     public void onClose(Session session) {
         String userId = (String) session.getUserProperties().get("userId");
 
-        Session s = sessions.remove(userId);
+        Session s = SessionUtil.remove(userId);
         try {
             s.close();
         } catch (IOException e) {
@@ -56,24 +66,34 @@ public class WebSocketServer {
     public void onMsg(String message, Session session) {
         log.info("从客户端：{} 收到<--:{}", session.getId(), message);
         String userId = (String) session.getUserProperties().get("userId");
+        SecurityManager securityManager = (SecurityManager) session.getUserProperties().get("securityManager");
+        SecurityUtils.setSecurityManager(securityManager);
         SocketMessage socketMessage = ObjectMapperUtil.readValue(message, SocketMessage.class);
         String receiver = socketMessage.getReceiver();
         if (ObjectUtils.isEmpty(receiver)) return;
-
+        String decodeMsg = URLDecoder.decode(socketMessage.getContent(), StandardCharsets.UTF_8);
         TextMessage textMessage = TextMessage.builder()
-                .content(socketMessage.getContent())
-                .createTime(LocalDateTime.now().format(DateTimeFormatUtil.SLASH_DATE))
+                .content(decodeMsg)
+                .createTime(getChatLineDisplayDate(LocalDateTime.now()))
                 .sender(userId)
+                .receiver(receiver)
                 .build();
         sendMessage(textMessage, socketMessage.getReceiver());
     }
 
-    public void sendMessage(Object message, String targetUser) {
+    public <T extends SseMessage> void sendMessage(T message, String targetUser) {
         try {
-            UserRelationService userRelationService = ContextHolder.getBean(UserRelationService.class);
-            userRelationService.validateUserRelation(targetUser);
+            UserRelationService userRelationService = applicationContext.getBean(UserRelationService.class);
+            SimpleFriendDTO simpleFriendDTO = userRelationService.validateUserRelation(message.getSender(), targetUser);
+            if(message instanceof TextMessage){
+                ((TextMessage) message).setSenderAvatar(MinioUtil.buildPath(simpleFriendDTO.getAvatarPath()));
+                ((TextMessage) message).setLastActiveTime(MinioUtil.buildPath(simpleFriendDTO.getAvatarPath()));
+            }
             String msg = ObjectMapperUtil.writeValueAsString(message);
-            sessions.get(targetUser).getBasicRemote().sendText(msg);
+            Session targetSession = SessionUtil.get(targetUser);
+            if (targetSession != null) {
+                targetSession.getBasicRemote().sendText(msg);
+            }
             ContextHolder.publish(message);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
@@ -84,7 +104,7 @@ public class WebSocketServer {
     /**
      * 自定义 指定的userId服务端向客户端发送消息
      */
-    public void sendInfo(Object message, String toUserId) {
+    public <T extends SseMessage> void sendInfo(T message, String toUserId) {
         if (ObjectUtils.isEmpty(message) || ObjectUtils.isEmpty(toUserId)) {
             return;
         }
@@ -93,4 +113,8 @@ public class WebSocketServer {
         }
     }
 
+
+    public static void setApplicationContext(ApplicationContext applicationContext) {
+        WebSocketServer.applicationContext = applicationContext;
+    }
 }

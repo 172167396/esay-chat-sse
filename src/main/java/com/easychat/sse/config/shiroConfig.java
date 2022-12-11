@@ -1,6 +1,7 @@
 package com.easychat.sse.config;
 
 import com.easychat.sse.shiro.CustomRealm;
+import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -30,9 +31,9 @@ public class shiroConfig {
     private final List<String> ignorePath = Arrays.asList("/login", "/user/register", "/register", "/user/checkRepeat", "/static/**", "/js/**", "/css/**", "/favicon.ico", "/img/**","/captcha");
 
     @Bean
-    public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qualifier("securityManager") DefaultWebSecurityManager defaultWebSecurityManager) {
+    public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qualifier("securityManager") SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
-        shiroFilter.setSecurityManager(defaultWebSecurityManager);
+        shiroFilter.setSecurityManager(securityManager);
         Map<String, String> filterMap = new LinkedHashMap<>();
 //        添加需要拦截的url，需要认证才能访问
         filterMap.put("/logout", "logout");
@@ -51,11 +52,11 @@ public class shiroConfig {
      * 为shiro框架核心对象，可注入不同的SecurityManager对象，另外可根据实际需求通过securityManager的set方法自定义安全管理对象
      */
     @Bean(name = "securityManager")
-    public DefaultWebSecurityManager securityManager() {
+    public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(buildShiroRealm());
         securityManager.setCacheManager(cacheManager());
         securityManager.setSessionManager(sessionManager());
+        securityManager.setRealm(buildShiroRealm());
         return securityManager;
     }
 
@@ -115,7 +116,7 @@ public class shiroConfig {
      * 加入注解的使用，不加入这个注解不生效
      */
     @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(DefaultWebSecurityManager securityManager) {
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
         AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
         authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
         return authorizationAttributeSourceAdvisor;

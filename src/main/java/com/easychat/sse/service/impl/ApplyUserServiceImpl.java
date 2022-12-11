@@ -11,9 +11,11 @@ import com.easychat.sse.model.entity.UserRelation;
 import com.easychat.sse.model.vo.FriendApplyVO;
 import com.easychat.sse.service.ApplyFriendService;
 import com.easychat.sse.service.UserRelationService;
+import com.easychat.sse.service.UserService;
 import com.easychat.sse.utils.ContextHolder;
 import com.easychat.sse.utils.IdUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,8 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+
+import static com.easychat.sse.shiro.ShiroUtil.getUser;
 
 @Slf4j
 @Service
@@ -30,6 +34,9 @@ public class ApplyUserServiceImpl implements ApplyFriendService {
     ApplyFriendMapper applyFriendMapper;
     @Resource
     UserRelationService userRelationService;
+    @Resource
+    @Lazy
+    UserService userService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -75,6 +82,14 @@ public class ApplyUserServiceImpl implements ApplyFriendService {
         userRelation.setRemarkName(args.getRemarkName());
         userRelation.setGroupId(args.getGroupId());
         userRelation.setJoinTime(LocalDateTime.now());
+        userRelationService.save(userRelation);
+        //对方插入一条好友记录
+        userRelation.setId(IdUtils.getId());
+        userRelation.setUserId(applyEntity.getApplyUser());
+        userRelation.setFriendId(userId);
+        userRelation.setRemarkName(applyEntity.getNickName());
+        String firstGroupId = userService.getFirstGroupId(applyEntity.getApplyUser());
+        userRelation.setGroupId(firstGroupId);
         userRelationService.save(userRelation);
         applyFriendMapper.updateApplyState(args.getId(), ApplyState.AGREED.getState());
         ContextHolder.publish(userRelation);

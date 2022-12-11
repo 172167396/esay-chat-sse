@@ -5,6 +5,17 @@
         ${ur}.id,${ur}.user_id,${ur}.friend_id,${ur}.remark_name,${ur}.join_time
     </sql>
 
+    <select id="findSimpleFriend" resultType="com.easychat.sse.model.dto.SimpleFriendDTO">
+        SELECT
+            ur.user_id,
+            u.avatar_path
+        FROM
+            `sys_user_relations` ur
+                LEFT JOIN sys_user u ON ur.user_id = u.id
+        WHERE
+            ur.user_id = #{userId}
+          AND ur.friend_id = #{targetId}
+    </select>
 
 
 </mapper>

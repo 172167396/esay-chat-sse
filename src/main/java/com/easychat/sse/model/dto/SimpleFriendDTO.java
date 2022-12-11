@@ -10,6 +10,7 @@ public class SimpleFriendDTO extends IdName {
     private String bucket;
     private String fileName;
     private String userId;
+    private String avatarPath;
     /**
      * 备注，为空时显示原本的名字
      */

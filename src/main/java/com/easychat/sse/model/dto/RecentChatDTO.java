@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 public class RecentChatDTO extends RecentChat {
     private String briefMsg;
-    private String bucket;
-    private String fileName;
+    private String avatarPath;
+    private String targetUserName;
 }

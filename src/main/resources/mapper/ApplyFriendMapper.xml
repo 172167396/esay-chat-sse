@@ -8,12 +8,13 @@
         ${af}.group_id,
         ${af}.state,
         ${af}.remark,
+        ${af}.nick_name,
         ${af}.create_time
     </sql>
 
     <insert id="save">
         insert into friend_apply  (<include refid="column"><property name="af" value="friend_apply"/></include>)
-        values (#{id},#{applyUser},#{receiveUser},#{groupId},#{state},#{remark})
+        values (#{id},#{applyUser},#{receiveUser},#{groupId},#{state},#{remark},#{nickName},now())
     </insert>
 
     <update id="updateApplyState">

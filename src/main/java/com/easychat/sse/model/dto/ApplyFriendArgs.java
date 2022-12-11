@@ -27,6 +27,7 @@ public class ApplyFriendArgs {
         entity.setRemark(remark);
         entity.setReceiveUser(id);
         entity.setGroupId(groupId);
+        entity.setNickName(nickName);
         entity.setState(ApplyState.NOT_HANDLE.getState());
         entity.setCreateTime(LocalDateTime.now());
         return entity;

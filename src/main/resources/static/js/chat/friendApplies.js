@@ -61,9 +61,13 @@ function agreeClick(e) {
             fixed: false,
             yes: function (index, layero) {//layer.msg('yes');    //点击确定回调
                 let body = top.layer.getChildFrame("body", index);
+                let win = $(layero).find("iframe")[0].contentWindow;
                 let $select = body.find(".group-select"),
-                    $inputName = body.find(".input-nickName");
+                    $inputName = body.find(".input-nickName"),
+                    $applyBtn = $(document).find(".applyBtn");
                 agree({id: id, groupId: $select.val(), remarkName: $inputName.val()}).then(() => {
+                    $applyBtn.empty();
+                    $applyBtn.append(`<span class="handledApply">已同意</span>`);
                     top.layer.close(index);
                 });
             },

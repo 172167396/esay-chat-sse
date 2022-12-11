@@ -1,9 +1,12 @@
 package com.easychat.sse.event.handler;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.easychat.sse.enums.MessageType;
 import com.easychat.sse.model.domain.SseMessage;
 import com.easychat.sse.model.dto.TextMessage;
 import com.easychat.sse.model.entity.MsgRecordEntity;
+import com.easychat.sse.model.entity.RecentChat;
+import com.easychat.sse.service.ChatService;
 import com.easychat.sse.service.MessageRecordService;
 import com.easychat.sse.utils.IdUtils;
 import org.springframework.context.event.EventListener;
@@ -18,6 +21,8 @@ public class RecordMsgHandler {
 
     @Resource
     MessageRecordService messageRecordService;
+    @Resource
+    ChatService chatService;
 
     @Async
     @EventListener(SseMessage.class)
@@ -31,6 +36,14 @@ public class RecordMsgHandler {
             entity.setSenderId(message.getSender());
             entity.setReceiverId(message.getReceiver());
             entity.setFileId(null);
+            RecentChat recentChat = chatService.getOne(Wrappers.<RecentChat>lambdaQuery().eq(RecentChat::getUserId, message.getSender()));
+            if (recentChat != null) {
+                entity.setBelongRecentId(recentChat.getId());
+                messageRecordService.save(entity);
+                return;
+            }
+            String id = chatService.dealRecentChat(message.getSender(), message.getReceiver());
+            entity.setBelongRecentId(id);
             messageRecordService.save(entity);
         }
     }

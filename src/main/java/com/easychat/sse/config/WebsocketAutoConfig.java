@@ -1,6 +1,9 @@
 package com.easychat.sse.config;
 
 import com.easychat.sse.shiro.ShiroUtil;
+import com.easychat.sse.utils.ContextHolder;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.mgt.SecurityManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;

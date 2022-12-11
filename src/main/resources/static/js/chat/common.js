@@ -39,12 +39,12 @@ class FetchApi {
             .then(res => res.json())
             .then(json => {
                 if (json?.code !== 200) {
-                    layer.alert(json?.msg);
+                    top.layer.alert(json?.msg);
                     return null;
                 }
                 return json;
             })
-            .catch(e => layer.alert(e.responseText));
+            .catch(e => top.layer.alert(e.responseText));
     }
 
     post(url, data) {
@@ -52,12 +52,12 @@ class FetchApi {
             .then(res => res.json())
             .then(json => {
                 if (json?.code !== 200) {
-                    layer.alert(json?.msg);
+                    top.layer.alert(json?.msg);
                     return null;
                 }
                 return json;
             })
-            .catch(e => layer.alert(e.responseText));
+            .catch(e => top.layer.alert(e.responseText));
     }
 
     getOption(method, body) {

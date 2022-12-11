@@ -27,4 +27,7 @@ public interface UserService {
     UserDomain getUserDomainByAccount(String username);
 
     List<SimpleGroupVO> findMyFriends(String userId, String id);
+
+    String getFirstGroupId(String applyUser);
+
 }

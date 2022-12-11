@@ -34,4 +34,7 @@ public interface UserMapper {
     UserDomain getUserDomainByAccount(String username);
 
     List<SimpleFriendDTO> findMyFriends(@Param("userId") String userId,@Param("groupId") String groupId);
+
+    String getFirstGroupId(String applyUser);
+
 }

@@ -1,9 +1,11 @@
 package com.easychat.sse.model.domain;
 
 import com.easychat.sse.config.MinioProperties;
+import com.easychat.sse.enums.MessageType;
 import com.easychat.sse.enums.RecentMsgType;
 import com.easychat.sse.model.dto.FriendApplyDTO;
 import com.easychat.sse.model.dto.MsgRecordDTO;
+import com.easychat.sse.model.dto.RecentChatDTO;
 import com.easychat.sse.model.vo.RecentChatVO;
 import com.easychat.sse.utils.MinioUtil;
 import lombok.AccessLevel;
@@ -17,30 +19,30 @@ import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class RecentChatDomain {
-    private List<MsgRecordDTO> recordEntities;
+    private List<RecentChatDTO> recentChatDTOS;
     private FriendApplyDTO friendApply;
 
 
-    public static RecentChatDomain newInstance(List<MsgRecordDTO> recordEntities,
+    public static RecentChatDomain newInstance(List<RecentChatDTO> recentChatDTOS,
                                                FriendApplyDTO friendApply) {
         RecentChatDomain recentChatDomain = new RecentChatDomain();
         recentChatDomain.friendApply = friendApply;
-        recentChatDomain.recordEntities = recordEntities;
+        recentChatDomain.recentChatDTOS = recentChatDTOS;
         return recentChatDomain;
     }
 
     public List<RecentChatVO> buildVO() {
-        if (CollectionUtils.isEmpty(recordEntities) && friendApply == null) {
+        if (CollectionUtils.isEmpty(recentChatDTOS) && friendApply == null) {
             return Collections.emptyList();
         }
-        List<RecentChatVO> recentChatVOS = recordEntities.stream().map(record -> new RecentChatVO(record.getId(),
-                        record.getUserName(),
-                        record.getContent(),
+        List<RecentChatVO> recentChatVOS = recentChatDTOS.stream().map(record -> new RecentChatVO(record.getId(),
+                        record.getTargetUserName(),
+                        record.getBriefMsg(),
                         RecentMsgType.PERSONAL,
-                        record.getCreateTime(),
-                        record.getCreateTime(),
-                        record.getReceiverId(),
-                        MinioUtil.buildPath(record.getBucket(), record.getFileName())))
+                        record.getLastActiveTime(),
+                        record.getLastActiveTime(),
+                        record.getTargetId(),
+                        MinioUtil.buildPath(record.getAvatarPath())))
                 .collect(Collectors.toList());
         if (friendApply != null) {
             RecentChatVO recentChatVO = new RecentChatVO(friendApply.getId(),
@@ -49,12 +51,12 @@ public class RecentChatDomain {
                     RecentMsgType.NEW_FRIEND,
                     friendApply.getCreateTime(),
                     friendApply.getCreateTime(),
-                    friendApply.getApplyUser(),
+                    RecentMsgType.NEW_FRIEND.name(),
                     null);
             recentChatVOS.add(recentChatVO);
         }
         return recentChatVOS.stream()
-                .sorted(Comparator.comparing(RecentChatVO::getLastActiveTime,Comparator.nullsLast(Comparator.naturalOrder())).reversed())
+                .sorted(Comparator.comparing(RecentChatVO::getLastActiveTime, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
                 .collect(Collectors.toList());
     }
 }

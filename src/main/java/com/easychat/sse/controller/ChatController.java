@@ -41,6 +41,7 @@ public class ChatController {
             case "NEW_FRIEND":
                 return new ModelAndView("chat/friendApplies");
         }
+        chatService.dealRecentChat(getUserId(), id);
         return new ModelAndView("chat/detail", param);
     }
 

@@ -49,23 +49,37 @@
 
     <select id="findMyFriends" resultType="com.easychat.sse.model.dto.SimpleFriendDTO">
         SELECT
-            ur.id,
-            ur.friend_id userId,
-            ur.group_id,
-            ur.remark_name,
-            u.`name`,
-            f.bucket,
-            f.file_name,
+        ur.id,
+        ur.friend_id userId,
+        g.id group_id,
+        ur.remark_name,
+        u.`name`,
+        f.bucket,
+        f.file_name,
         g.`name` groupName
         FROM
-            `sys_user_relations` ur
-                LEFT JOIN sys_user u ON ur.friend_id = u.id
-                LEFT JOIN sse_file f ON u.avatar_id = f.id
-        LEFT JOIN sys_friend_group g on ur.group_id = g.id
-        where ur.user_id = #{userId}
+        `sys_friend_group` g
+        LEFT JOIN sys_user_relations ur on g.id = ur.group_id
+        LEFT JOIN sys_user u ON ur.friend_id = u.id
+        LEFT JOIN sse_file f ON u.avatar_id = f.id
+        WHERE
+        g.create_user = #{userId}
         <if test="groupId != null and groupId !=''">
             and ur.group_id = #{groupId}
         </if>
+        order by g.create_time
+    </select>
+
+    <select id="getFirstGroupId" resultType="java.lang.String">
+        SELECT
+            id
+        FROM
+            sys_friend_group
+        WHERE
+            create_user = #{value}
+        ORDER BY
+            create_time DESC
+            LIMIT 1
     </select>
 
 </mapper>

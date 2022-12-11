@@ -27,4 +27,17 @@ public class DateTimeFormatUtil {
         }
         return date.format(CN_DATE);
     }
+
+    public static String getChatLineDisplayDate(LocalDateTime lastActiveTime) {
+        if (lastActiveTime == null) {
+            return "";
+        }
+        LocalDate date = LocalDate.from(lastActiveTime);
+        boolean isToday = LocalDate.now().equals(date);
+        if (isToday) {
+            return lastActiveTime.format(HM);
+        }
+        boolean isYesterday = LocalDate.now().minusDays(1).equals(date);
+        return isYesterday ? "昨天" : lastActiveTime.format(MD);
+    }
 }
