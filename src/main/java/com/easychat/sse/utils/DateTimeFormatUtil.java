@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 
 public class DateTimeFormatUtil {
 
+    public static final DateTimeFormatter YYYY_MM_DD = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     public static final DateTimeFormatter HM = DateTimeFormatter.ofPattern("HH:mm");
     public static final DateTimeFormatter MD = DateTimeFormatter.ofPattern("M-d");
     public static final DateTimeFormatter CN_DATE = DateTimeFormatter.ofPattern("yyyy年M月d天");

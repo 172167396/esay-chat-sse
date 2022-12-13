@@ -18,6 +18,7 @@ public enum RecentMsgType {
      * 系统通知
      */
     NOTICE,
+    SYSTEM,
     /**
      * 好友申请
      */

@@ -1,8 +1,7 @@
 $(function () {
     let $searchBtn = $(".searchBtn");
     $searchBtn.click(function () {
-        let content = $(".searchInput").val(),
-            $searchResult = $("#searchResult");
+        let content = $(".searchInput").val();
         if (!content) {
             layer.msg("请输入账号或昵称后再点击查找");
             return;
@@ -82,7 +81,7 @@ function renderSearchedUsers(data) {
         $searchResult.empty();
         $searchResult.append(`<div class="user inline-block">
                 <div class="avatarDiv inline-block">
-                    <img alt="" class="userAvatar" src="${e.avatarUrl}"/>
+                    <img alt="" class="userAvatar" src="${e.avatarPath}"/>
                 </div>
                 <div class="userInfo inline-block">
                     <p class="names text-ell" title="${e.name}(${e.account})">${e.name}(${e.account})</p>

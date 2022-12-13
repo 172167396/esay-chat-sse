@@ -2,8 +2,10 @@ package com.easychat.sse.server;
 
 import cn.hutool.core.net.URLDecoder;
 import com.easychat.sse.config.WebsocketAutoConfig;
+import com.easychat.sse.enums.RecentMsgType;
 import com.easychat.sse.exception.CustomRuntimeException;
 import com.easychat.sse.model.domain.SseMessage;
+import com.easychat.sse.model.domain.UserDomain;
 import com.easychat.sse.model.dto.SimpleFriendDTO;
 import com.easychat.sse.model.dto.SocketMessage;
 import com.easychat.sse.model.dto.TextMessage;
@@ -27,8 +29,6 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static com.easychat.sse.utils.DateTimeFormatUtil.getChatLineDisplayDate;
 
@@ -39,7 +39,6 @@ import static com.easychat.sse.utils.DateTimeFormatUtil.getChatLineDisplayDate;
 public class WebSocketServer {
 
     private static ApplicationContext applicationContext;
-
 
 
     @OnOpen
@@ -64,8 +63,8 @@ public class WebSocketServer {
 
     @OnMessage
     public void onMsg(String message, Session session) {
-        log.info("从客户端：{} 收到<--:{}", session.getId(), message);
-        String userId = (String) session.getUserProperties().get("userId");
+        log.info("从客户端：{} 收到-->:{}", session.getId(), message);
+        UserDomain userDomain = (UserDomain) session.getUserProperties().get("userId");
         SecurityManager securityManager = (SecurityManager) session.getUserProperties().get("securityManager");
         SecurityUtils.setSecurityManager(securityManager);
         SocketMessage socketMessage = ObjectMapperUtil.readValue(message, SocketMessage.class);
@@ -75,19 +74,24 @@ public class WebSocketServer {
         TextMessage textMessage = TextMessage.builder()
                 .content(decodeMsg)
                 .createTime(getChatLineDisplayDate(LocalDateTime.now()))
-                .sender(userId)
+                .sender(userDomain.getId())
+                .name(userDomain.getName())
                 .receiver(receiver)
+                .type(RecentMsgType.PERSONAL)
                 .build();
-        sendMessage(textMessage, socketMessage.getReceiver());
+        sendMessage(textMessage, socketMessage.getReceiver(), false);
     }
 
-    public <T extends SseMessage> void sendMessage(T message, String targetUser) {
+    public <T extends SseMessage> void sendMessage(T message, String targetUser, boolean system) {
         try {
-            UserRelationService userRelationService = applicationContext.getBean(UserRelationService.class);
-            SimpleFriendDTO simpleFriendDTO = userRelationService.validateUserRelation(message.getSender(), targetUser);
-            if(message instanceof TextMessage){
-                ((TextMessage) message).setSenderAvatar(MinioUtil.buildPath(simpleFriendDTO.getAvatarPath()));
-                ((TextMessage) message).setLastActiveTime(MinioUtil.buildPath(simpleFriendDTO.getAvatarPath()));
+            if (!system) {
+                UserRelationService userRelationService = applicationContext.getBean(UserRelationService.class);
+                SimpleFriendDTO simpleFriendDTO = userRelationService.validateUserRelation(message.getSender(), targetUser);
+                if (message instanceof TextMessage) {
+                    ((TextMessage) message).setSenderAvatar(MinioUtil.buildPath(simpleFriendDTO.getAvatarPath()));
+                    ((TextMessage) message).setLastActiveTime(DateTimeFormatUtil.getChatLineDisplayDate(LocalDateTime.now()));
+                    ((TextMessage) message).setName(simpleFriendDTO.getName());
+                }
             }
             String msg = ObjectMapperUtil.writeValueAsString(message);
             Session targetSession = SessionUtil.get(targetUser);
@@ -101,15 +105,16 @@ public class WebSocketServer {
         }
     }
 
+
     /**
      * 自定义 指定的userId服务端向客户端发送消息
      */
-    public <T extends SseMessage> void sendInfo(T message, String toUserId) {
+    public <T extends SseMessage> void sendInfo(T message, String toUserId, boolean system) {
         if (ObjectUtils.isEmpty(message) || ObjectUtils.isEmpty(toUserId)) {
             return;
         }
         if (!ObjectUtils.isEmpty(toUserId)) {
-            sendMessage(message, toUserId);
+            sendMessage(message, toUserId, system);
         }
     }
 

@@ -7,8 +7,6 @@ import org.springframework.util.ObjectUtils;
 @Getter
 @Setter
 public class SimpleFriendDTO extends IdName {
-    private String bucket;
-    private String fileName;
     private String userId;
     private String avatarPath;
     /**

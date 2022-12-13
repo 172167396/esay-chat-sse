@@ -33,7 +33,7 @@
             <input type="text" class="captcha" name="captcha" placeholder="验证码" autocomplete="off" value="">
             <img th:src="@{/captcha(v=${T(java.lang.Math).random()})}" class="captchaImg" onclick="refreshCaptcha(this)" style="width: 9em;height: 2.5em;" />
         </div>
-        <a style="color: #bdbbbb;text-align: right;cursor: pointer;float: right;text-decoration: unset;margin-right: 1em;margin-top: 1em;" target="_blank" th:href="@{/register}">注册账号</a>
+        <a style="color: #bdbbbb;text-align: right;cursor: pointer;float: right;text-decoration: unset;margin-right: 1em;margin-top: 1em;" target="_self" th:href="@{/register}">注册账号</a>
         <div class="login-btn">
             <input type="button" class="loginBtn" value="登录">
         </div>

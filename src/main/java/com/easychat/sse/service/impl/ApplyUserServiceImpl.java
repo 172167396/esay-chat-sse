@@ -6,6 +6,7 @@ import com.easychat.sse.enums.ApplyState;
 import com.easychat.sse.exception.CustomRuntimeException;
 import com.easychat.sse.model.dto.ApplyAgreeDTO;
 import com.easychat.sse.model.dto.FriendApplyDTO;
+import com.easychat.sse.model.dto.UserRelationDTO;
 import com.easychat.sse.model.entity.FriendApply;
 import com.easychat.sse.model.entity.UserRelation;
 import com.easychat.sse.model.vo.FriendApplyVO;
@@ -92,6 +93,11 @@ public class ApplyUserServiceImpl implements ApplyFriendService {
         userRelation.setGroupId(firstGroupId);
         userRelationService.save(userRelation);
         applyFriendMapper.updateApplyState(args.getId(), ApplyState.AGREED.getState());
-        ContextHolder.publish(userRelation);
+        UserRelationDTO userRelationDTO = new UserRelationDTO();
+        userRelationDTO.setApplyGroup(applyEntity.getGroupId());
+        userRelationDTO.setAgreeGroup(args.getGroupId());
+        userRelationDTO.setUserId(applyEntity.getApplyUser());
+        userRelationDTO.setFriendId(applyEntity.getReceiveUser());
+        ContextHolder.publish(userRelationDTO);
     }
 }

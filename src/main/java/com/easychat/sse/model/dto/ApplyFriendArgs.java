@@ -20,7 +20,7 @@ public class ApplyFriendArgs {
     private String remark;
 
 
-    public FriendApply toEntity(String applyUserId){
+    public FriendApply toEntity(String applyUserId,String applyUserName){
         FriendApply entity = new FriendApply();
         entity.setId(IdUtils.getId());
         entity.setApplyUser(applyUserId);
@@ -28,6 +28,7 @@ public class ApplyFriendArgs {
         entity.setReceiveUser(id);
         entity.setGroupId(groupId);
         entity.setNickName(nickName);
+        entity.setApplyUserName(applyUserName);
         entity.setState(ApplyState.NOT_HANDLE.getState());
         entity.setCreateTime(LocalDateTime.now());
         return entity;

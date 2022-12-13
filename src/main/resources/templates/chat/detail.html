@@ -6,20 +6,20 @@
     <link rel="stylesheet" th:href="@{/css/chat/detail.css}">
 </head>
 <body>
-    <div class="container" th:if="${id != 'blank'}" th:data-id="${id}">
-        <div class="right">
-            <div class="top"><span>To: <span class="name sendTo"></span></span></div>
-            <div class="chat active active-chat">
-                <div class="conversation-start"><span>2022-11-28 09:33:10</span></div>
-            </div>
-            <div class="write">
-                <a href="javascript:;" class="write-link attach"></a>
-                <input class="message" type="text"/>
-                <a href="javascript:;" class="write-link smiley"></a>
-                <a href="javascript:;" class="write-link send"></a>
-            </div>
+<div class="container" th:if="${id != 'blank'}" th:data-id="${id}">
+    <div class="right">
+        <div class="top"><span>To: <span class="name sendTo"></span></span></div>
+        <div class="chat active active-chat">
+            <div class="conversation-start"><span th:text="${createTime}"></span></div>
+        </div>
+        <div class="write">
+            <a href="javascript:;" class="write-link attach"></a>
+            <input class="message" type="text"/>
+            <a href="javascript:;" class="write-link smiley"></a>
+            <a href="javascript:;" class="write-link send"></a>
         </div>
     </div>
+</div>
 </body>
 <script th:src="@{/js/chat/detail.js}"></script>
 </html>

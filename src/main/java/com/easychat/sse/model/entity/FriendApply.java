@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 public class FriendApply {
     private String id;
     private String applyUser;
+    private String applyUserName;
     private String receiveUser;
     private String groupId;
     private int state;

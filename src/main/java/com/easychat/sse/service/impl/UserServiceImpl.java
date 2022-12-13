@@ -1,12 +1,12 @@
 package com.easychat.sse.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.easychat.sse.config.MinioProperties;
 import com.easychat.sse.dao.UserMapper;
 import com.easychat.sse.event.RegisterEvent;
 import com.easychat.sse.exception.CustomRuntimeException;
 import com.easychat.sse.model.domain.UserDomain;
 import com.easychat.sse.model.dto.*;
+import com.easychat.sse.model.entity.FriendApply;
 import com.easychat.sse.model.entity.UserEntity;
 import com.easychat.sse.model.entity.UserFriendGroup;
 import com.easychat.sse.model.entity.UserRelation;
@@ -39,11 +39,10 @@ public class UserServiceImpl implements UserService {
     @Resource
     UserMapper userMapper;
     @Resource
-    MinioProperties minioProperties;
-    @Resource
     ApplyFriendService applyFriendService;
     @Resource
     UserRelationService userRelationService;
+
 
     @Override
     public UserEntity getUserByAccount(String userAccount) {
@@ -80,6 +79,7 @@ public class UserServiceImpl implements UserService {
         userEntity.setName(nickName);
         userEntity.setPassword(MD5Utils.getMd5(PASSWD_SECRET + password));
         userEntity.setGender("1");
+        userEntity.setAvatarPath("/common/awlu4-sgjpy.jpg");
         userMapper.save(userEntity);
         ContextHolder.publish(new RegisterEvent(userEntity.getId()));
     }
@@ -101,9 +101,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<SimpleUser> searchUser(String content) {
-        List<SimpleUser> simpleUsers = userMapper.searchUser(content);
-        simpleUsers.forEach(user -> user.setMinioEndPoint(minioProperties.getEndPoint()));
-        return simpleUsers;
+        return userMapper.searchUser(content);
     }
 
     @Override
@@ -113,9 +111,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public SimpleUser getSimpleUserInfo(String id) {
-        SimpleUser simpleUserInfo = userMapper.getSimpleUserInfo(id);
-        simpleUserInfo.setMinioEndPoint(minioProperties.getEndPoint());
-        return simpleUserInfo;
+        return userMapper.getSimpleUserInfo(id);
     }
 
     @Override
@@ -124,7 +120,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void applyFriend(UserEntity user, ApplyFriendArgs applyFriendArgs) {
+    public void applyFriend(UserDomain user, ApplyFriendArgs applyFriendArgs) {
         UserEntity targetUser = userMapper.getById(applyFriendArgs.getId());
         if (targetUser == null) {
             throw new CustomRuntimeException("该用户不存在");
@@ -139,8 +135,9 @@ public class UserServiceImpl implements UserService {
         if (user.getId().equals(applyFriendArgs.getId())) {
             throw new CustomRuntimeException("无法添加自己");
         }
-        applyFriendService.save(applyFriendArgs.toEntity(user.getId()));
-
+        FriendApply friendApplyEntity = applyFriendArgs.toEntity(user.getId(), user.getName());
+        applyFriendService.save(friendApplyEntity);
+        ContextHolder.publish(friendApplyEntity);
     }
 
     @Override
@@ -168,7 +165,7 @@ public class UserServiceImpl implements UserService {
                             SimpleFriendVO simpleFriendVO = new SimpleFriendVO();
                             simpleFriendVO.setId(friendDTO.getUserId());
                             simpleFriendVO.setName(friendDTO.getDisplayName());
-                            simpleFriendVO.setAvatar(MinioUtil.buildPath(friendDTO.getBucket(), friendDTO.getFileName()));
+                            simpleFriendVO.setAvatar(MinioUtil.buildPath(friendDTO.getAvatarPath()));
                             return simpleFriendVO;
                         }).sorted(Comparator.comparing(SimpleFriendVO::getName, Comparator.nullsLast(Comparator.naturalOrder())))
                         .collect(Collectors.toList());

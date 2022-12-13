@@ -19,6 +19,9 @@ public class UserRelationServiceImpl extends ServiceImpl<UserRelationMapper, Use
     @Resource
     UserRelationMapper userRelationMapper;
 
+    /**
+     * 校验好友关系，返回sender的头像，以及sender在targetUser里的备注
+     */
     @Override
     public SimpleFriendDTO validateUserRelation(String sender, String targetUser) {
 //        long count = count(Wrappers.<UserRelation>lambdaQuery().eq(UserRelation::getUserId, sender).eq(UserRelation::getFriendId, targetUser));

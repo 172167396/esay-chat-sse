@@ -3,33 +3,35 @@ package com.easychat.sse.model.dto;
 import com.easychat.sse.enums.MessageType;
 import com.easychat.sse.enums.RecentMsgType;
 import com.easychat.sse.model.domain.SseMessage;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
-public class TextMessage implements SseMessage {
-    private String content;
-    private String createTime;
-    private String sender;
-    private String name;
-    private String senderAvatar;
-    private String lastActiveTime;
-    private RecentMsgType type;
-    @JsonIgnore
+public class RefreshGroupMsg implements SseMessage {
+
+    private String groupId;
+
     private String receiver;
 
     @Override
     public MessageType getMessageType() {
-        return MessageType.TEXT;
+        return MessageType.REFRESH_GROUP_USER;
     }
 
     @Override
     public RecentMsgType getType() {
-        return type;
+        return RecentMsgType.NOTICE;
+    }
+
+    @Override
+    public String getContent() {
+        return null;
+    }
+
+    @Override
+    public String getSender() {
+        return RecentMsgType.SYSTEM.name();
     }
 
     @Override

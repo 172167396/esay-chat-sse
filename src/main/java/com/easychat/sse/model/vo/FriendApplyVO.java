@@ -11,6 +11,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.easychat.sse.enums.FriendApplySource.FRIEND_SEARCH;
+
 @Getter
 @Setter
 public class FriendApplyVO {
@@ -34,9 +36,9 @@ public class FriendApplyVO {
                     vo.setRemark(dto.getRemark());
                     vo.setState(dto.getState());
                     vo.setUserName(dto.getUserName());
-                    vo.setAvatar(MinioUtil.buildPath(dto.getBucket(), dto.getFileName()));
+                    vo.setAvatar(MinioUtil.buildPath(dto.getAvatarPath()));
                     vo.setCreateTime(DateTimeFormatUtil.getDisplayDate(dto.getCreateTime()));
-                    vo.setSource("来自QQ查找");
+                    vo.setSource(FRIEND_SEARCH.getName());
                     return vo;
                 }).collect(Collectors.toList());
     }

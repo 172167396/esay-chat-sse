@@ -2,12 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.easychat.sse.dao.UserMapper">
     <sql id="column">
-        id,name,account,password,gender,address,mobile
+            ${u}.id,
+            ${u}.name,
+            ${u}.account,
+            ${u}.password,
+            ${u}.gender,
+            ${u}.address,
+            ${u}.avatar_id,
+            ${u}.mobile,
+            ${u}.avatar_path
     </sql>
 
     <insert id="save">
-        insert into sys_user (<include refid="column"></include>)
-        values (#{id},#{name},#{account},#{password},#{gender},#{address},#{mobile})
+        insert into sys_user (<include refid="column"><property name="u" value="sys_user"/></include>)
+        values (#{id},
+                #{name},
+                #{account},
+                #{password},
+                #{gender},
+                #{address},
+                #{avatarId},
+                #{mobile},
+                #{avatarPath})
     </insert>
 
     <insert id="initUserGroup">
@@ -15,25 +31,23 @@
     </insert>
 
     <select id="getUserByAccount" resultType="com.easychat.sse.model.entity.UserEntity">
-        select id,name,account,password,gender,address,mobile from sys_user where account = #{value}
+        select <include refid="column"><property name="u" value="u"/></include> from sys_user u where account = #{value}
     </select>
     <select id="getUserGroups" resultType="com.easychat.sse.model.dto.IdTitle">
         select id,name title from sys_friend_group where create_user = #{value}
     </select>
 
     <select id="searchUser" resultType="com.easychat.sse.model.dto.SimpleUser">
-        select u.id,u.name,u.account,u.gender,f.bucket,f.file_name from sys_user u
-        left join sse_file f on u.avatar_id = f.id
+        select u.id,u.name,u.account,u.gender,u.avatar_path from sys_user u
         where u.account = #{value} or u.name = #{value}
     </select>
 
     <select id="getById" resultType="com.easychat.sse.model.entity.UserEntity">
-        select <include refid="column"></include> from sys_user where id = #{value}
+        select <include refid="column"><property name="u" value="u"/></include> from sys_user u where id = #{value}
     </select>
 
     <select id="getSimpleUserInfo" resultType="com.easychat.sse.model.dto.SimpleUser">
-        select u.id,u.name,u.account,u.gender,f.bucket,f.file_name from sys_user u
-        left join sse_file f on u.avatar_id = f.id
+        select u.id,u.name,u.account,u.gender,u.avatar_path from sys_user u
         where u.id = #{value}
     </select>
 
@@ -42,8 +56,7 @@
     </select>
 
     <select id="getUserDomainByAccount" resultType="com.easychat.sse.model.domain.UserDomain">
-        select u.id,u.name,u.account,u.password,u.gender,u.address,u.mobile,f.bucket,f.file_name from sys_user u
-        left join sse_file f on u.avatar_id = f.id
+        select <include refid="column"><property name="u" value="u"/></include> from sys_user u
         where u.account = #{value}
     </select>
 
@@ -54,14 +67,12 @@
         g.id group_id,
         ur.remark_name,
         u.`name`,
-        f.bucket,
-        f.file_name,
+        u.`avatar_path`,
         g.`name` groupName
         FROM
         `sys_friend_group` g
         LEFT JOIN sys_user_relations ur on g.id = ur.group_id
         LEFT JOIN sys_user u ON ur.friend_id = u.id
-        LEFT JOIN sse_file f ON u.avatar_id = f.id
         WHERE
         g.create_user = #{userId}
         <if test="groupId != null and groupId !=''">

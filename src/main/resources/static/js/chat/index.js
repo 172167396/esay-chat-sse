@@ -1,29 +1,13 @@
-let host = location.host, $rightFrame = $("#rightFrame");
 $(function () {
-    // $(document).on("click", "#recent-chat .chat-line", function (e) {
-    //     alert(e.target);
-    // });
     layui.use(['tree', 'dropdown', 'util'], function () {
-        let tree = layui.tree
-            , layer = layui.layer
+        let layer = layui.layer
             , util = layui.util,
             dropdown = layui.dropdown;
-        initRecentChat().then(data => {
+        initRecentChat().then(() => {
             //绑定聊天列表点击事件
             bindChatClick();
         })
-        // initFriendGroups(tree).then(data => {
-        //     initDropdown(dropdown);
-        //     clickGroup();
-        //     return data;
-        // }).then(data => {
-        //
-        //     tree.render({
-        //         elem: '#userGroups'
-        //         , data: data
-        //         , showLine: false  //是否开启连接线
-        //     });
-        // });
+
         //好友列表
         getFriendsAndRefreshGroup();
         //加好友/加群
@@ -32,49 +16,6 @@ $(function () {
         bindSwitchBtnClick();
 
     });
-
-
-    // let url = `http://${host}/connect/`;
-    // let source = new EventSource(url);
-    // source.onopen = function () {
-    //     console.log("connected.....");
-    // };
-
-    // source.addEventListener("message", function (e) {
-    //     let msgJson = JSON.parse(e.data);
-    //     let messageEntity = msgJson.message;
-    //     console.log(msgJson);
-    //     console.log(messageEntity);
-    //
-    //     // let users = msgJson.onlineUsers;
-    //     // let $people = $(".people");
-    //     // if (messageEntity.messageType === 1) {
-    //     //     renderUsers(users, $people);
-    //     // } else if (messageEntity.messageType === 2) {
-    //     //     renderMsg(messageEntity);
-    //     // } else if (messageEntity.messageType === 3) {
-    //     //     removeUser(messageEntity.createUserId);
-    //     // }
-    //     // choosePerson();
-    // });
-
-
-    let _beforeUnload_time = 0, _gap_time = 0;
-    //是否是火狐浏览器
-    // let is_fireFox = navigator.userAgent.indexOf("Firefox") > -1;
-    window.onunload = function () {
-        _gap_time = new Date().getTime() - _beforeUnload_time;
-        if (_gap_time <= 5) {
-            $.get("/close");
-        }
-        // else {
-        //     //刷新
-        // }
-    }
-
-    window.onbeforeunload = function () {
-        _beforeUnload_time = new Date().getTime();
-    };
 })
 
 
@@ -85,23 +26,23 @@ function initRecentChat() {
                 layer.alert(r.msg);
                 return null;
             }
-            let $recentChat = $("#recent-chat"), $chatTarget = "";
+            let $recentChat = $("#recent-chat");
             const $container = $recentChat.children('ul');
             $.each(r.data, function (i, e) {
-                const $chatLine = $(`<li class="chat-line" id="${e.targetId}">
-                                <div class="${e.type}">
+                const $chatLine = $(`<li class="chat-line" id="${e?.targetId}">
+                                <div class="${e?.type}">
                                     <div class="notice-msg relative">
-                                        <div class="sys-notice ${e.type === 'NOTICE' || '' ? 'show' : 'displayNone'}">
+                                        <div class="sys-notice ${e?.type === 'NOTICE' || '' ? 'show' : 'displayNone'}">
                                         </div>
-                                        <div class="new-apply ${e.type === 'NEW_FRIEND' ? 'show' : 'displayNone'}">
+                                        <div class="new-apply ${e?.type === 'NEW_FRIEND' ? 'show' : 'displayNone'}">
                                         </div>
-                                        <div class="recent-chat ${e.type === 'PERSONAL' ? 'show' : 'displayNone'}">
-                                            <img class="chat-avatar" src="${e.avatar ?? ''}">
+                                        <div class="recent-chat ${e?.type === 'PERSONAL' ? 'show' : 'displayNone'}">
+                                            <img class="chat-avatar" src="${e?.avatar ?? ''}">
                                         </div>
-                                        <p class="nickName overflowEllips">${e.name}</p>
-                                        <p class="chatDate">${e.chatDate}</p>
+                                        <p class="nickName overflowEllips">${e?.name}</p>
+                                        <p class="chatDate">${e?.chatDate ?? ""}</p>
                                         <span class="notRead hide"></span>
-                                        <p class="short-desc overflowEllips" title="${e.briefMsg}">${e.briefMsg}</p>
+                                        <p class="short-desc overflowEllips" title="${e?.briefMsg ?? ""}">${e?.briefMsg ?? ""}</p>
                                     </div>
                                 </div>
                             </li>`);
@@ -112,34 +53,31 @@ function initRecentChat() {
         })
 }
 
+
 function bindChatClick() {
-    let $recentChatLi = $("#recent-chat").find("li");
-    $(document).on('click',".chat-line",function(){
-        let $this = $(this);
-        let $unReadSpan = $recentChatLi.find(".notRead"),
+    $(document).on('click', ".chat-line", function () {
+        let $this = $(this), $rightIframe = $("#rightFrame");
+        let $unReadSpan = $this.find(".notRead"),
             type = $this.data("type"),
             id = $this.data("id");
         if (type === 'NEW_FRIEND') id = type;
         $unReadSpan.text("");
         $unReadSpan.addClass("hide");
-        $rightFrame.attr("data-id", id);
-        $rightFrame.attr("src", ctx + "/chat/recent/" + id);
+        let iframeId = $rightIframe.attr("data-id");
+        if (iframeId === id) {
+            return;
+        }
+        $rightIframe.attr("data-id", id);
+        $rightIframe.attr("src", ctx + "/chat/recent/" + id);
     })
-    // $recentChatLi.each(function (i, e) {
-    //
-    //     $this.click(function () {
-    //
-    //     })
-    // })
-
 }
 
-function getFriendsAndRefreshGroup() {
+function getFriendsAndRefreshGroup(groupId) {
     let $groupsUl = $("#groups");
-    FetchUtil.get(ctx + "/user/friends").then(res => {
+    FetchUtil.get(ctx + `/user/friends?id=${groupId ? groupId : ''}`).then(res => {
         if (res?.data) {
             $.each(res.data, function (i, e) {
-                let tmp = `<li class="layui-nav-item">
+                let tmp = `<li class="layui-nav-item" id="${e.id}">
                             <a class="" href="javascript:;">${e.groupName}
                             <i class="expand layui-icon layui-icon-triangle-r layui-nav-more"></i>
                             </a>
@@ -152,7 +90,11 @@ function getFriendsAndRefreshGroup() {
                 if (e.users?.length < 1) {
                     $li.find('.layui-nav-child').addClass("emptyDl");
                 }
-                $groupsUl.append($li);
+                if (groupId) {
+                    $groupsUl.find(`li#${groupId}`).replaceWith($li);
+                } else {
+                    $groupsUl.append($li);
+                }
             })
         }
     }).then(() => {
@@ -171,21 +113,40 @@ function refreshNav() {
 }
 
 function bindUserClick() {
-    $("dd.friend").click(function () {
-        let id = $(this).data("id");
-        $rightFrame.attr("data-id", id);
-        $rightFrame.attr("src", ctx + "/chat/recent/" + id);
+    $(document).on('dblclick', "dd.friend", function () {
+        //添加到最近聊天里，然后置顶
+        let id = $(this).data("id"),
+            $chatLine = $(`.chat-line#${id}`),
+            msgJson,
+            $chatPanel = $(".chat-panel"),
+            $rightIframe = $("#rightFrame");
+        msgJson = {
+            type: "PERSONAL",
+            name: $(this).find(".friendName").text(),
+            sender: id,
+            senderAvatar: $(this).find(".avatarInGroup").attr("src"),
+            createTime: dayjs().format("HH:mm"),
+            content: "",
+        };
+        if ($chatLine?.length < 1) {
+            //插入一条最近聊天
+            insertChatLine(msgJson);
+        } else {
+            //置顶
+            let tmp = $chatLine;
+            $chatLine.remove();
+            $recentChatUl.prepend(tmp);
+        }
+        $chatPanel.click();
+        let iframeId = $rightIframe.attr("data-id");
+        if (iframeId === id) {
+            return;
+        }
+        $rightIframe.attr("data-id", id);
+        $rightIframe.attr("src", ctx + "/chat/recent/" + id);
     })
 }
 
-
-function showNewApply() {
-    let $applies = $(".applies"), $chats = $(".chats");
-    $(".new-apply").click(function () {
-        $chats.hide();
-        $applies.addClass("active");
-    })
-}
 
 function registerAddBtnClick(layer) {
     $(".addAction").click(function () {

@@ -60,12 +60,16 @@ body {
     height: 100%;
     border: 1px solid var(--light);
     background-color: var(--white);
-    overflow-y: auto;
+    overflow-y: clip;
     overflow-x: hidden;
 }
 
 .hide {
     visibility: hidden !important;
+}
+
+.selected {
+    background-color: #f3f4f5;
 }
 
 .displayNone {

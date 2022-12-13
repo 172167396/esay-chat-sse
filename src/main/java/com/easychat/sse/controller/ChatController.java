@@ -6,10 +6,13 @@ import com.easychat.sse.model.vo.RecentChatVO;
 import com.easychat.sse.response.R;
 import com.easychat.sse.service.ChatService;
 import com.easychat.sse.service.MessageRecordService;
+import com.easychat.sse.utils.DateTimeFormatUtil;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +37,7 @@ public class ChatController {
     public ModelAndView recentChat(@PathVariable String id) {
         Map<String, String> param = new HashMap<>();
         param.put("id", id);
+        param.put("createTime", LocalDateTime.now().format(DateTimeFormatUtil.YYYY_MM_DD));
         String type = RecentMsgType.NEW_FRIEND.name();
         switch (id) {
             case "blank":

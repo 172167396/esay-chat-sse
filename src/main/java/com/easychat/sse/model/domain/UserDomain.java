@@ -9,11 +9,5 @@ import java.io.Serializable;
 @Getter
 @Setter
 public class UserDomain extends UserEntity implements Serializable {
-    private String endPoint;
-    private String bucket;
-    private String fileName;
 
-    public String getAvatarUrl() {
-        return endPoint + "/" + bucket + "/" + fileName;
-    }
 }

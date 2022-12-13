@@ -21,56 +21,31 @@
 
     <select id="getRecentChat" resultType="com.easychat.sse.model.dto.RecentChatDTO">
         SELECT
-                    u.`name` targetUserName,
-                    u.id targetId,
-                    u.avatar_path,
-                    r.content briefMsg,
-                    rc.last_active_time
-                FROM
-                    recent_chat rc
-                        LEFT JOIN sys_user u ON rc.target_id = u.id
-                        LEFT JOIN (
-                        SELECT
-                            max(create_time),
-                            belong_recent_id,
-                            content
-                        FROM
-                            message_record
-                        GROUP BY
-                            belong_recent_id,
-                            content
-                        ORDER BY
-                            create_time DESC
-                            LIMIT 1
-                    ) r ON r.belong_recent_id = rc.id
-                WHERE
-                    rc.user_id = #{value}
-                UNION
+            u.`name` targetUserName,
+            u.id targetId,
+            u.avatar_path,
+            r.content briefMsg,
+            rc.last_active_time
+        FROM
+            recent_chat rc
+                LEFT JOIN sys_user u ON rc.target_id = u.id
+                LEFT JOIN (
                 SELECT
-                    u.`name` targetUserName,
-                    u.id targetId,
-                    u.avatar_path,
-                    r.content briefMsg,
-                    rc.last_active_time
+                    max(r.create_time),
+                    content
                 FROM
-                    recent_chat rc
-                        LEFT JOIN sys_user u ON rc.user_id = u.id
-                        LEFT JOIN (
-                        SELECT
-                            max(create_time),
-                            belong_recent_id,
-                            content
-                        FROM
-                            message_record
-                        GROUP BY
-                            belong_recent_id,
-                            content
-                        ORDER BY
-                            create_time DESC
-                            LIMIT 1
-                    ) r ON r.belong_recent_id = rc.id
+                    message_record r
                 WHERE
-                    rc.target_id = #{value}
+                    r.sender_id = #{value}
+                   OR r.receiver_id = #{value}
+                GROUP BY
+                    content
+                ORDER BY
+                    r.create_time DESC
+                    LIMIT 1
+            ) r ON 1 = 1
+        WHERE
+            rc.user_id = #{value}
     </select>
 
     <select id="getByUserAndTarget" resultType="com.easychat.sse.model.entity.RecentChat">

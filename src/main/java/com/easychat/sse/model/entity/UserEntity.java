@@ -19,6 +19,7 @@ public class UserEntity implements Serializable {
     private String address;
     private String mobile;
     private String avatarId;
+    private String avatarPath;
     private LocalDateTime createTime;
     private List<IdTitle> groups;
 }

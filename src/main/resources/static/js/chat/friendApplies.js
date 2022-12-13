@@ -1,5 +1,7 @@
 $(function () {
-    init().then(() => agreeClick());
+    init().then(() => {
+        buttonClick()
+    });
 })
 
 async function init() {
@@ -38,46 +40,64 @@ async function init() {
     }
 }
 
-function agreeClick(e) {
-
-    let $agree = $(".agree");
-    $agree.click(function (e) {
-        let id = $(e.target).closest(".applyLine").data("id"),
-            remarkName = "";
-
-        let index = top.layer.open({
-            type: 2,
-            offset: '160px',
-            skin: 'my-skin',
-            title: `添加`,
-            maxmin: false,
-            id: 'layerDemo' + uuid(), //防止重复弹出,
-            content: ctx + "/friend/applyInfo/" + id,
-            btn: ['确定'],
-            btnAlign: 'r', //按钮居右
-            shade: 0, //不显示遮罩
-            // title: false,
-            area: ['260px', '180px'],
-            fixed: false,
-            yes: function (index, layero) {//layer.msg('yes');    //点击确定回调
-                let body = top.layer.getChildFrame("body", index);
-                let win = $(layero).find("iframe")[0].contentWindow;
-                let $select = body.find(".group-select"),
-                    $inputName = body.find(".input-nickName"),
-                    $applyBtn = $(document).find(".applyBtn");
-                agree({id: id, groupId: $select.val(), remarkName: $inputName.val()}).then(() => {
-                    $applyBtn.empty();
-                    $applyBtn.append(`<span class="handledApply">已同意</span>`);
-                    top.layer.close(index);
-                });
-            },
-            btn2: function (index) {
-                layer.close(index);//layer.closeAll();
-            }
-        });
+function buttonClick() {
+    let $btn = $(".applyBtn button");
+    $btn.click(function () {
+        let $this = $(this),
+            id = $this.closest(".applyLine").data("id"),
+            isAgree = $this.hasClass("agree");
+        isAgree ? showAgree(id) : showIgnore(id);
     })
+}
+
+function showAgree(id) {
+    top.layer.open({
+        type: 2,
+        offset: '160px',
+        skin: 'my-skin',
+        title: `添加`,
+        maxmin: false,
+        id: 'layerDemo' + uuid(), //防止重复弹出,
+        content: ctx + "/friend/applyInfo/" + id,
+        btn: ['确定'],
+        btnAlign: 'r', //按钮居右
+        shade: 0, //不显示遮罩
+        // title: false,
+        area: ['260px', '180px'],
+        fixed: false,
+        yes: function (index, layero) {
+            let body = top.layer.getChildFrame("body", index);
+            let $select = body.find(".group-select"),
+                $inputName = body.find(".input-nickName"),
+                $applyBtn = $(document).find(".applyBtn"),
+                reqObj = {id: id, groupId: $select.val(), remarkName: $inputName.val()};
+            agree(reqObj).then(() => {
+                $applyBtn.empty();
+                $applyBtn.append(`<span class="handledApply">已同意</span>`);
+                top.layer.close(index);
+            });
+        },
+        btn2: function (index) {
+            layer.close(index);
+        }
+    });
+}
+
+function showIgnore(id) {
+    top.layer.confirm('确定忽略该请求?', {icon: 3, title: '提示', btn: ['确定', '取消']}, function (index) {
+        //do something
+        alert("click yes");
+        ignore(id).then(() => layer.close(index));
+
+    }, function (index) {
+        layer.close(index);
+    });
 }
 
 function agree(obj) {
     return FetchUtil.post(ctx + "/friend/agree", obj);
+}
+
+function ignore(id) {
+    return FetchUtil.post(ctx + `/friend/ignore?id=${id}`);
 }

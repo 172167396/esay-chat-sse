@@ -22,7 +22,7 @@ public interface UserService {
 
     List<IdName> queryUserGroup(String userId);
 
-    void applyFriend(UserEntity user, ApplyFriendArgs applyFriendArgs);
+    void applyFriend(UserDomain user, ApplyFriendArgs applyFriendArgs);
 
     UserDomain getUserDomainByAccount(String username);
 

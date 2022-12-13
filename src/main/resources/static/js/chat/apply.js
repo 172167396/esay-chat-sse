@@ -12,8 +12,7 @@ $(function () {
             return;
         }
         searchUser(content).catch(e => {
-            console.log(e);
-            layer.alert(e);
+            top.layer.alert(e);
             return null;
         }).then(renderSearchedUsers);
 
@@ -31,7 +30,7 @@ function renderSearchedUsers(json) {
         $searchResult.empty();
         $searchResult.append(`<div class="user inline-block">
                 <div class="avatarDiv inline-block">
-                    <img class="userAvatar" src="${e.avatarUrl}"/>
+                    <img class="userAvatar" src="${e.avatarPath}"/>
                 </div>
                 <div class="userInfo inline-block">
                     <p class="names text-ell">${e.name}(${e.account})</p>

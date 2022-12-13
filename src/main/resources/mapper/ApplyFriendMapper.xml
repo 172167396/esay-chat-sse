@@ -36,11 +36,11 @@
     </select>
 
     <select id="getOwnerApplies" resultType="com.easychat.sse.model.dto.FriendApplyDTO">
-        select  <include refid="column"><property name="af" value="af"/></include>,u.name userName,
-            f.bucket,f.file_name
-            from friend_apply af
+        select  <include refid="column"><property name="af" value="af"/></include>,
+            u.name userName,
+            u.avatar_path
+        from friend_apply af
         left join sys_user u on u.id = af.apply_user
-        left join sse_file f on u.avatar_id = f.id
         where af.receive_user = #{value}
     </select>
 

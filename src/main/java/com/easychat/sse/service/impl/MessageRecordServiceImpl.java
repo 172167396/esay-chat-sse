@@ -1,12 +1,9 @@
 package com.easychat.sse.service.impl;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.easychat.sse.dao.MessageRecordMapper;
 import com.easychat.sse.model.entity.MsgRecordEntity;
-import com.easychat.sse.model.entity.RecentChat;
 import com.easychat.sse.model.vo.MessageRecordVO;
-import com.easychat.sse.service.ChatService;
 import com.easychat.sse.service.MessageRecordService;
 import org.springframework.stereotype.Service;
 
@@ -18,15 +15,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class MessageRecordServiceImpl extends ServiceImpl<MessageRecordMapper, MsgRecordEntity> implements MessageRecordService {
+
     @Resource
-    ChatService chatService;
+    MessageRecordMapper messageRecordMapper;
 
     @Override
     public List<MessageRecordVO> getRecords(String userId, String targetId) {
-        RecentChat recentChat = chatService.getByUserAndTarget(userId, targetId);
-        List<MsgRecordEntity> entities = super.list(Wrappers.<MsgRecordEntity>lambdaQuery().eq(MsgRecordEntity::getBelongRecentId, recentChat.getId())
-                .orderBy(true, false, MsgRecordEntity::getCreateTime)
-                .last(true, "limit 0,30"));
+        List<MsgRecordEntity> entities = messageRecordMapper.getRecordByUserIdAndTargetId(userId, targetId);
         if (entities.isEmpty()) {
             return Collections.emptyList();
         }

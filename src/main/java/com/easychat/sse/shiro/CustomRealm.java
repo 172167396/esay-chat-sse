@@ -1,11 +1,11 @@
 package com.easychat.sse.shiro;
 
-import com.easychat.sse.config.MinioProperties;
 import com.easychat.sse.model.domain.UserDomain;
 import com.easychat.sse.model.dto.IdTitle;
 import com.easychat.sse.model.entity.UserEntity;
 import com.easychat.sse.service.UserService;
 import com.easychat.sse.utils.ContextHolder;
+import com.easychat.sse.utils.MinioUtil;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -34,7 +34,6 @@ public class CustomRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
         UserService userService = ContextHolder.getBean(UserService.class);
-        MinioProperties minioProperties = ContextHolder.getBean(MinioProperties.class);
         UserDomain userDomain = userService.getUserDomainByAccount(token.getUsername());
         if (userDomain == null) {
             throw new UnknownAccountException(ERROR_ACCOUNT_PASSWORD);
@@ -45,7 +44,7 @@ public class CustomRealm extends AuthorizingRealm {
         //查询用户好友分组
         List<IdTitle> groups = userService.getUserGroups(userDomain.getId());
         userDomain.setGroups(groups);
-        userDomain.setEndPoint(minioProperties.getEndPoint());
+        userDomain.setAvatarPath(MinioUtil.buildPath(userDomain.getAvatarPath()));
         return new SimpleAuthenticationInfo(userDomain, userDomain.getPassword(), getName());
     }
 

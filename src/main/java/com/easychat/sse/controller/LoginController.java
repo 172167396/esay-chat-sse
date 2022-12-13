@@ -67,7 +67,7 @@ public class LoginController {
     @GetMapping("/index")
     public String index(Model model) {
         model.addAttribute("username", getUser().getName());
-        model.addAttribute("userAvatar", getUser().getAvatarUrl());
+        model.addAttribute("userAvatar", getUser().getAvatarPath());
         return "chat/index";
     }
 }

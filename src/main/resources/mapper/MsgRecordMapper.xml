@@ -26,4 +26,14 @@
         ORDER BY r.create_time desc limit 20
     </select>
 
+    <select id="getRecordByUserIdAndTargetId" resultType="com.easychat.sse.model.entity.MsgRecordEntity">
+        select <include refid="column">
+            <property name="mr" value="r"/>
+        </include>
+        from message_record r
+        where (sender_id = #{userId} and receiver_id = #{targetId})
+        or (receiver_id = #{userId} and sender_id = #{targetId})
+        order by create_time desc limit 0,50
+    </select>
+
 </mapper>
