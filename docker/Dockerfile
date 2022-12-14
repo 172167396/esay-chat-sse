@@ -3,21 +3,9 @@ FROM jre:8
 MAINTAINER dailu
 ENV MYPATH /home/socket-chat
 
-ENV BUILDNAME=$buildName
-ENV DSURL=$dsUrl
-ENV DSNAME=$dsName
-ENV DSPWD=$dsPwd
-ENV REDISHOST=$redisHost
-ENV REDISPWD=$redisPwd
-ENV MINIOURL=$minioUrl
-ENV MINIONAME=$minioName
-ENV MINIOPWD=$minioPwd
-
-
 WORKDIR $MYPATH
 # ADD 命令必须提供两个参数，第一个参数为：宿主机中的目录，相对于Dockerfile文件
 # 第二个参数为容器中的目录，相对于WORKDIR
-RUN echo $BUILDNAME
 ADD ./$BUILDNAME.jar sse-chat.jar
 # VOLUME 指定了临时文件目录为/tmp。
 # 其效果是在主机 /var/lib/docker 目录下创建了一个临时文件，并链接到容器的$MYPATH
