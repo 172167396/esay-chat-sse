@@ -18,4 +18,6 @@ public interface ApplyFriendMapper {
     FriendApply getApplyById(@Param("id") String id,@Param("receiveUser") String receiveUser);
 
     void updateApplyState(@Param("id") String id, @Param("state") int state);
+
+    void ignoreFriendApply(@Param("userId") String userId,@Param("id") String id);
 }

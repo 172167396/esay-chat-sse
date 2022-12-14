@@ -21,6 +21,10 @@
         update friend_apply set state = #{state} where id = #{id}
     </update>
 
+    <update id="ignoreFriendApply">
+        update friend_apply   set state = 2 where id = #{id} and receive_user = #{userId}
+    </update>
+
     <select id="getApply" resultType="com.easychat.sse.model.dto.FriendApplyDTO">
         select
         <include refid="column">

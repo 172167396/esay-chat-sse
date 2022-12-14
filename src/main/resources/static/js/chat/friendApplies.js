@@ -84,10 +84,15 @@ function showAgree(id) {
 }
 
 function showIgnore(id) {
-    top.layer.confirm('确定忽略该请求?', {icon: 3, title: '提示', btn: ['确定', '取消']}, function (index) {
+    top.layer.confirm('确定忽略该请求?', {icon: 3, title: '提示', btn: ['确定', '取消']}, function (index, layro) {
         //do something
         alert("click yes");
-        ignore(id).then(() => layer.close(index));
+        ignore(id).then(() => {
+            let $applyBtn = $(document).find(".applyBtn")
+            $applyBtn.empty();
+            $applyBtn.append(`<span class="handledApply">已忽略</span>`);
+            top.layer.close(index)
+        });
 
     }, function (index) {
         layer.close(index);

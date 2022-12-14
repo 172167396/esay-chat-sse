@@ -33,6 +33,12 @@ public class FriendApplyController {
         return R.success();
     }
 
+    @PostMapping("/ignore")
+    public R<Boolean> ignore(String id) {
+        applyFriendService.ignore(getUserId(), id);
+        return R.success();
+    }
+
     @GetMapping("/applyInfo/{id}")
     public ModelAndView applyInfo(@PathVariable String id) {
         HashMap<String, String> map = new HashMap<>();

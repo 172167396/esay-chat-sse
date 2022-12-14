@@ -13,4 +13,6 @@ public interface ApplyFriendService {
 
     void agree(String userId, ApplyAgreeDTO args);
 
+    void ignore(String userId, String id);
+
 }

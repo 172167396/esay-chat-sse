@@ -100,4 +100,10 @@ public class ApplyUserServiceImpl implements ApplyFriendService {
         userRelationDTO.setFriendId(applyEntity.getReceiveUser());
         ContextHolder.publish(userRelationDTO);
     }
+
+    @Override
+    public void ignore(String userId, String id) {
+        //只更新接收人是自己的记录
+        applyFriendMapper.ignoreFriendApply(userId,id);
+    }
 }
