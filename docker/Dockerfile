@@ -15,6 +15,7 @@ ADD ./$BUILDNAME.jar sse-chat.jar
 VOLUME $MYPATH
 #RUN echo "-Dspring.datasource.url=\"$dsUrl\" -Dspring.datasource.username=$dsName -Dspring.datasource.password=$dsPwd -Dspring.redis.host=$redisHost -Dspring.redis.password=$redisPwd -Dminio.endpoint=\"$minioUrl\" -Dminio.accessKey=$minioName -Dminio.secretKey=$minioPwd"
 EXPOSE 10088
+RUN ls /usr/bin
 RUN ls /usr/bin/touch
 # 运行jar包
 RUN bash -c 'touch ./sse-chat.jar'
