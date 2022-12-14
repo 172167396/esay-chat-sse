@@ -3,6 +3,9 @@ FROM jre:8
 MAINTAINER dailu
 ENV MYPATH /home/socket-chat
 
+ARG buildName
+ENV BUILDNAME $buildName
+
 WORKDIR $MYPATH
 # ADD 命令必须提供两个参数，第一个参数为：宿主机中的目录，相对于Dockerfile文件
 # 第二个参数为容器中的目录，相对于WORKDIR
