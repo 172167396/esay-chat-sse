@@ -1,4 +1,4 @@
-FROM java:8-jre-alpine
+FROM openjdk:8-jre-alpine3.9
 
 MAINTAINER dailu
 ENV MYPATH /home/socket-chat
