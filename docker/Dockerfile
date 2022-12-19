@@ -36,6 +36,6 @@ VOLUME $MYPATH
 EXPOSE 10088
 
 # 运行jar包
-RUN bash -c 'touch ./sse-chat.jar'
+#RUN bash -c 'touch ./sse-chat.jar'
 #ENTRYPOINT 里的变量只能使用ENV里的
 ENTRYPOINT java -Dspring.datasource.url="$DSURL" -Dspring.datasource.username=$DSNAME -Dspring.datasource.password=$DSPWD -Dspring.redis.host=$REDISHOST -Dspring.redis.password=$REDISPWD -Dminio.endpoint="$MINIOURL" -Dminio.accessKey=$MINIONAME -Dminio.secretKey=$MINIOPWD -jar ./sse-chat.jar
