@@ -1,8 +1,8 @@
 package com.easychat.sse.controller;
 
+import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.LineCaptcha;
 import com.easychat.sse.utils.RedisUtil;
-import com.wf.captcha.ArithmeticCaptcha;
-import com.wf.captcha.utils.CaptchaUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,17 +22,13 @@ public class CaptchaController {
 
     @GetMapping("/captcha")
     public void captcha(HttpServletRequest request, HttpServletResponse response) {
-        ArithmeticCaptcha captcha = new ArithmeticCaptcha(126, 35);
-        // 几位数运算，默认是两位
-        captcha.setLen(2);
-        // 获取运算的公式：4-9+1=?
-        captcha.getArithmeticString();
-        // 获取运算的结果：-4
-        String text = captcha.text();
-        RedisUtil.set(request.getRequestedSessionId(), text, 1800L);
+        LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 90, 4, 100);
+        // 验证码值
+        String code = lineCaptcha.getCode();
+        RedisUtil.set(request.getRequestedSessionId(), code, 1800L);
         try (OutputStream out = response.getOutputStream()) {
             // 输出验证码
-            captcha.out(out);
+            lineCaptcha.write(out);
         } catch (IOException e) {
             try {
                 response.sendError(500);
