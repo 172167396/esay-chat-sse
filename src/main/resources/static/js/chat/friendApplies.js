@@ -17,7 +17,7 @@ async function init() {
                 <div class="userInfo">
                     <p>${e.userName}</p>
                     <p>来源：${e.source}</p><br>
-                    <p>${e.remark}</p>
+                    <p title="${e.remark}">${e.remark}</p>
                     ${(function () {
                 return e.state === 0 ? `<button>回复</button>` : '';
             })()}

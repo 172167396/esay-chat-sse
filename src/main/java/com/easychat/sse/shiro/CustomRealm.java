@@ -6,19 +6,20 @@ import com.easychat.sse.model.entity.UserEntity;
 import com.easychat.sse.service.UserService;
 import com.easychat.sse.utils.ContextHolder;
 import com.easychat.sse.utils.MinioUtil;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-
+import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.subject.support.DefaultSubjectContext;
 import java.util.ArrayList;
 import java.util.List;
-
 import static com.easychat.sse.constant.Constant.ERROR_ACCOUNT_PASSWORD;
 
 public class CustomRealm extends AuthorizingRealm {
-
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
@@ -61,5 +62,12 @@ public class CustomRealm extends AuthorizingRealm {
         permissions.add("permissionsC");
         simpleAuthorizationInfo.addStringPermissions(permissions);
         return simpleAuthorizationInfo;
+    }
+
+    public void resetPrincipalInfo(UserDomain user) {
+        Subject subject = SecurityUtils.getSubject();
+        String realmName = subject.getPrincipals().getRealmNames().iterator().next();
+        SimplePrincipalCollection principals = new SimplePrincipalCollection(user, realmName);
+        subject.getSession().setAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY, principals);
     }
 }

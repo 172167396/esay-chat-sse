@@ -36,7 +36,7 @@ public class RecentChatDomain {
             return Collections.emptyList();
         }
         List<RecentChatVO> recentChatVOS = recentChatDTOS.stream().map(record -> new RecentChatVO(record.getId(),
-                        record.getTargetUserName(),
+                        record.getRemarkName(),
                         record.getBriefMsg(),
                         RecentMsgType.PERSONAL,
                         record.getLastActiveTime(),

@@ -3,16 +3,24 @@ html, body {
     height: 100%;
 }
 
+::-webkit-scrollbar {
+    background-color: transparent;
+}
+
+.container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    height: 100%;
+}
 
 .container .right {
     width: 100%;
     height: 100%;
-    overflow-x: clip;
+    overflow: hidden;
 }
 
 .container .right .top {
-    width: 97%;
-    height: 2em;
+    height: 4em;
     padding: 15px 0 15px 17px;
     background-color: #eceff1;
 }
@@ -37,7 +45,6 @@ html, body {
 
 .active-chat {
     overflow-y: scroll;
-    height: 80% !important;
 }
 
 
@@ -48,6 +55,10 @@ html, body {
 }
 
 .active-chat::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+
+.active-chat:hover::-webkit-scrollbar-thumb {
     /*滚动条里面小方块*/
     border-radius: 10px;
     background-color: skyblue;
@@ -63,75 +74,98 @@ html, body {
     );
 }
 
-.active-chat::-webkit-scrollbar-track {
-    /*滚动条里面轨道*/
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-    background: #ededed;
+#editor::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 4px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+}
+
+#editor::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+
+#editor:hover::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
     border-radius: 10px;
+    background-color: skyblue;
+    background-image: -webkit-linear-gradient(
+            45deg,
+            rgba(255, 255, 255, 0.2) 25%,
+            transparent 25%,
+            transparent 50%,
+            rgba(255, 255, 255, 0.2) 50%,
+            rgba(255, 255, 255, 0.2) 75%,
+            transparent 75%,
+            transparent
+    );
+}
+
+
+.active-chat::-webkit-scrollbar-track {
+    background: transparent;
 }
 
 .container .right .chat.active-chat {
-    overflow-y: sc;
-    max-height: 32em;
-    margin-bottom: -2em;
-    height: 32em !important;
+    max-height: 28em;
+    height: 28em !important;
 }
 
 .container .right .chat.active-chat .bubble {
     transition-timing-function: cubic-bezier(0.4, -0.04, 1, 1);
     max-width: 10em;
     word-break: break-all;
-}
-
-.container .right .chat.active-chat .bubble:nth-of-type(1) {
-    -webkit-animation-duration: 0.15s;
     animation-duration: 0.15s;
 }
 
-.container .right .chat.active-chat .bubble:nth-of-type(2) {
-    -webkit-animation-duration: 0.3s;
-    animation-duration: 0.3s;
-}
+/*.container .right .chat.active-chat .bubble:nth-of-type(1) {*/
+/*    -webkit-animation-duration: 0.15s;*/
+/*    animation-duration: 0.15s;*/
+/*}*/
 
-.container .right .chat.active-chat .bubble:nth-of-type(3) {
-    -webkit-animation-duration: 0.45s;
-    animation-duration: 0.45s;
-}
+/*.container .right .chat.active-chat .bubble:nth-of-type(2) {*/
+/*    -webkit-animation-duration: 0.3s;*/
+/*    animation-duration: 0.3s;*/
+/*}*/
 
-.container .right .chat.active-chat .bubble:nth-of-type(4) {
-    -webkit-animation-duration: 0.6s;
-    animation-duration: 0.6s;
-}
+/*.container .right .chat.active-chat .bubble:nth-of-type(3) {*/
+/*    -webkit-animation-duration: 0.45s;*/
+/*    animation-duration: 0.45s;*/
+/*}*/
 
-.container .right .chat.active-chat .bubble:nth-of-type(5) {
-    -webkit-animation-duration: 0.75s;
-    animation-duration: 0.75s;
-}
+/*.container .right .chat.active-chat .bubble:nth-of-type(4) {*/
+/*    -webkit-animation-duration: 0.6s;*/
+/*    animation-duration: 0.6s;*/
+/*}*/
 
-.container .right .chat.active-chat .bubble:nth-of-type(6) {
-    -webkit-animation-duration: 0.9s;
-    animation-duration: 0.9s;
-}
+/*.container .right .chat.active-chat .bubble:nth-of-type(5) {*/
+/*    -webkit-animation-duration: 0.75s;*/
+/*    animation-duration: 0.75s;*/
+/*}*/
 
-.container .right .chat.active-chat .bubble:nth-of-type(7) {
-    -webkit-animation-duration: 1.05s;
-    animation-duration: 1.05s;
-}
+/*.container .right .chat.active-chat .bubble:nth-of-type(6) {*/
+/*    -webkit-animation-duration: 0.9s;*/
+/*    animation-duration: 0.9s;*/
+/*}*/
 
-.container .right .chat.active-chat .bubble:nth-of-type(8) {
-    -webkit-animation-duration: 1.2s;
-    animation-duration: 1.2s;
-}
+/*.container .right .chat.active-chat .bubble:nth-of-type(7) {*/
+/*    -webkit-animation-duration: 1.05s;*/
+/*    animation-duration: 1.05s;*/
+/*}*/
 
-.container .right .chat.active-chat .bubble:nth-of-type(9) {
-    -webkit-animation-duration: 1.35s;
-    animation-duration: 1.35s;
-}
+/*.container .right .chat.active-chat .bubble:nth-of-type(8) {*/
+/*    -webkit-animation-duration: 1.2s;*/
+/*    animation-duration: 1.2s;*/
+/*}*/
 
-.container .right .chat.active-chat .bubble:nth-of-type(10) {
-    -webkit-animation-duration: 1.5s;
-    animation-duration: 1.5s;
-}
+/*.container .right .chat.active-chat .bubble:nth-of-type(9) {*/
+/*    -webkit-animation-duration: 1.35s;*/
+/*    animation-duration: 1.35s;*/
+/*}*/
+
+/*.container .right .chat.active-chat .bubble:nth-of-type(10) {*/
+/*    -webkit-animation-duration: 1.5s;*/
+/*    animation-duration: 1.5s;*/
+/*}*/
 
 .container .right .write {
     clear: both;
@@ -243,7 +277,7 @@ html, body {
 .container .right .bubble.me {
     float: right;
     color: white;
-    background-color: #1e6eff;
+    background-color: #1E9FFF;
     align-self: flex-end;
     -webkit-animation-name: slideFromRight;
     animation-name: slideFromRight;
@@ -251,7 +285,7 @@ html, body {
 
 .container .right .bubble.me:before {
     right: -2px;
-    background-color: #1e6eff;
+    background-color: #1E9FFF;
     top: 0;
 }
 
@@ -297,6 +331,108 @@ html, body {
 
 .container .right .conversation-start span:after {
     right: 0;
+}
+
+.emoji_icon {
+    width: 30px !important;
+    height: 30px !important;
+}
+
+#editor {
+    resize: none;
+}
+
+.footer {
+    height: 3em;
+    line-height: 2em;
+    text-align: right;
+}
+
+.sendBtn {
+    margin-right: 1em;
+    padding-right: 3px !important;
+}
+
+.sendBtn span {
+    opacity: 0.6;
+    margin-left: 2em;
+}
+
+.footer .sendBtn i {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    vertical-align: middle;
+    background: url(/img/down-arrow.png) no-repeat center;
+    background-size: 60%;
+}
+
+.toolBar {
+    height: 2em;
+    display: flex;
+    border-top: 1px solid lightgray;
+}
+
+.toolBar .left-side {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.toolBar .left-side {
+    width: 40%;
+    height: 100%;
+}
+
+.toolBar .right-side {
+    width: 60%;
+    height: 100%;
+}
+
+.toolBar .left-side div {
+    width: 10%;
+    height: 90%;
+    cursor: pointer;
+}
+
+.emoji {
+    background: url("/img/emoji.png") no-repeat center;
+    background-size: 118%;
+}
+
+.screenshot {
+    background: url("/img/screenshot.png") no-repeat center;
+    background-size: 94%;
+}
+
+.pick-picture {
+    background: url("/img/pick-picture.png") no-repeat center;
+    background-size: 132%;
+}
+
+.pick-file {
+    background: url("/img/pick-file.png") no-repeat center;
+    background-size: 98%;
+}
+
+.chooseEnter {
+    display: none;
+    position: absolute;
+    text-align: left !important;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
+    box-shadow: #ada8a8 0 0 10px;
+    font-size: 12px;
+    left: 64%;
+    z-index: 999;
+    padding: 5px 10px;
+    bottom: 7.5%;
+    border-radius: 3px;
+}
+
+.chooseEnter label {
+    margin-bottom: 0 !important;
 }
 
 @keyframes slideFromLeft {

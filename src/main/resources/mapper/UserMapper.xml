@@ -30,6 +30,10 @@
         insert into sys_friend_group(id,name,create_user,create_time) values(#{id},#{name},#{createUser},#{createTime})
     </insert>
 
+    <update id="updateAvatarPath">
+        update sys_user set avatar_path = #{avatarPath} where id = #{userId}
+    </update>
+
     <select id="getUserByAccount" resultType="com.easychat.sse.model.entity.UserEntity">
         select <include refid="column"><property name="u" value="u"/></include> from sys_user u where account = #{value}
     </select>

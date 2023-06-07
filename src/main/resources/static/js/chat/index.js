@@ -14,10 +14,17 @@ $(function () {
         bindAddBtn();
         registerAddBtnClick(layer);
         bindSwitchBtnClick();
-
+        //编辑个人信息
+        editPersonalInfo();
     });
+
 })
 
+
+function triggerScreenshot() {
+    let screenshot = new Screenshot({iframe: $("#rightFrame").contents().find("html")});
+    screenshot.init();
+}
 
 function initRecentChat() {
     return FetchUtil.get(ctx + "/chat/recent")
@@ -42,33 +49,44 @@ function initRecentChat() {
                                         <p class="nickName overflowEllips">${e?.name}</p>
                                         <p class="chatDate">${e?.chatDate ?? ""}</p>
                                         <span class="notRead hide"></span>
-                                        <p class="short-desc overflowEllips" title="${e?.briefMsg ?? ""}">${e?.briefMsg ?? ""}</p>
+                                        <p class="short-desc overflowEllips" title="">${e.briefMsg ?? ""}</p>
                                     </div>
                                 </div>
                             </li>`);
                 $chatLine.data("id", e.targetId);
                 $chatLine.data("type", e.type);
+                let simplifyMsg = simplifyEmojiFromHtml($chatLine.find(".short-desc").html());
+                $chatLine.find(".short-desc").html(simplifyMsg);
+                $chatLine.find(".short-desc").attr("title", simplifyMsg);
                 $container.append($chatLine);
             })
         })
 }
 
-
+/**
+ * 最近聊天点击
+ */
 function bindChatClick() {
     $(document).on('click', ".chat-line", function () {
         let $this = $(this), $rightIframe = $("#rightFrame");
         let $unReadSpan = $this.find(".notRead"),
+            nickName = $this.find(".nickName").text(),
             type = $this.data("type"),
-            id = $this.data("id");
+            id = $this.attr("id");
         if (type === 'NEW_FRIEND') id = type;
-        $unReadSpan.text("");
         $unReadSpan.addClass("hide");
+        $unReadSpan.text("");
+        $(".chat-line").removeClass("focus");
+        $this.addClass("focus");
         let iframeId = $rightIframe.attr("data-id");
         if (iframeId === id) {
             return;
         }
         $rightIframe.attr("data-id", id);
         $rightIframe.attr("src", ctx + "/chat/recent/" + id);
+        setTimeout(function () {
+            $rightIframe.contents().find(".sendTo").text(nickName)
+        }, 500)
     })
 }
 
@@ -85,7 +103,7 @@ function getFriendsAndRefreshGroup(groupId) {
                             ${e.users?.length > 0 ? e.users.map(item => {
                     return `<dd class="friend" data-id="${item.id}"><img class="avatarInGroup" src="${item.avatar}"><a class="friendName inline-block" href="javascript:;">${item.name}</a></dd>`;
                 }).join('') : ''
-                }</dl></li>`
+                }</dl></li>`;
                 const $li = $(tmp);
                 if (e.users?.length < 1) {
                     $li.find('.layui-nav-child').addClass("emptyDl");
@@ -112,6 +130,9 @@ function refreshNav() {
     })
 }
 
+/**
+ * 好友列表点击
+ */
 function bindUserClick() {
     $(document).on('dblclick', "dd.friend", function () {
         //添加到最近聊天里，然后置顶
@@ -144,6 +165,10 @@ function bindUserClick() {
         }
         $rightIframe.attr("data-id", id);
         $rightIframe.attr("src", ctx + "/chat/recent/" + id);
+        setTimeout(function () {
+            $rightIframe.contents().find(".sendTo").text(msgJson.name)
+        }, 500)
+
     })
 }
 
@@ -246,79 +271,29 @@ function initDropdown(dropdown) {
     });
 }
 
-function getGroups() {
-    return fetch(ctx + "/user/groups")
-        .then(res => res.json())
-        .then(r => {
-            if (r.code !== 200) {
-                layer.alert();
-                return null;
+function editPersonalInfo() {
+    let $avatarUrl = $(".avatarUrl");
+    $avatarUrl.click(function () {
+        top.layer.open({
+            type: 2,
+            offset: '130px',
+            skin: '',
+            maxmin: false,
+            id: 'layerDemo' + uuid(), //防止重复弹出,
+            content: ctx + "/user/infoPage",
+            btn: ['编辑资料'],
+            btnAlign: 'c', //按钮居右
+            shade: 0, //不显示遮罩
+            title: " ",
+            area: ['350px', '480px'],
+            fixed: false,
+            yes: function (index, layero) {
+
+            },
+            cancel: function (index) {
             }
-            return r.data;
-        })
-}
-
-
-function getDate(dt) {
-    let year = dt.getFullYear();
-    let month = dt.getMonth() + 1;
-    let day = dt.getDate();
-    let hour = dt.getHours();
-    let minute = dt.getMinutes();
-    let second = dt.getSeconds();
-    //星期
-    // let arr = ["天", "一", "二", "三", "四", "五", "六"];
-    // let week = dt.getDay();//4
-
-
-    // month = month < 10 ? "0" + month : month;
-    // day = day < 10 ? "0" + day : day;
-    // hour = hour < 10 ? "0" + hour : hour;
-    // minut = minut < 10 ? "0" + minut : minut;
-    // second = second < 10 ? "0" + second : second;
-
-    //定义一个补位的函数
-    function buWei(i) {
-        return i < 10 ? "0" + i : i;
-    }
-
-    return year + "-" + buWei(month) + "-" + buWei(day) + " " + buWei(hour) + ":" + buWei(minute) + ":" + buWei(second);
-}
-
-
-function renderMsg(messageEntity) {
-    let msg = messageEntity.content;
-    let createUser = messageEntity.createUserId;
-    let $user = $(`li[data-id='${createUser}']`);
-    let sendTime = messageEntity.sendTime;
-    let chatPage = $(`#${createUser}`);
-    if (chatPage.length > 0) {
-        let startTime = chatPage.children(".conversation-start");
-        if (startTime.length === 0) {
-            chatPage.append(`<div class="conversation-start"><span>${sendTime}</span></div>`);
-        }
-        chatPage.append(`<div class="bubble ${createUser === userId ? 'me' : 'you'}">${msg}</div>`)
-    } else {
-        $(".write").before(`<div class="chat" id="${createUser}" data-id="${createUser}">
-                <div class="conversation-start"><span>${sendTime}</span></div>
-                <div class="bubble ${createUser === userId ? 'me' : 'you'}">${msg}</div>
-                </div>`);
-    }
-    let $unRead = $user.children(".notRead");
-    let $prevMsg = $user.children(".preview");
-    $unRead.addClass("unRead");
-    $prevMsg.text(msg);
-    let unReadCount = $unRead.text();
-    if (unReadCount === "") {
-        $unRead.text("1");
-        return;
-    }
-    let c, count = (c = parseInt(unReadCount) + 1) > 99 ? 99 : c;
-    if (count > 99) {
-        $unRead.text(count);
-        return;
-    }
-    $unRead.text(c);
+        });
+    })
 }
 
 

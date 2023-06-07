@@ -59,6 +59,10 @@ html, body {
 
 .userInfo p:nth-child(4) {
     margin: 0 0.5em 0.5em 0.1em;
+    max-width: 10em;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .userInfo button {
@@ -67,6 +71,7 @@ html, body {
     color: #2976ff;
     margin-left: 1em;
     cursor: pointer;
+    vertical-align: inherit;
 }
 
 .applies:hover {

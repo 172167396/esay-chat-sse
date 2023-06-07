@@ -1,4 +1,4 @@
-package com.easychat.sse.listener;
+package com.easychat.sse.event.handler;
 
 import com.easychat.sse.model.dto.RefreshGroupMsg;
 import com.easychat.sse.model.dto.UserRelationDTO;

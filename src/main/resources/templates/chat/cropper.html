@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:include="header :: common_header(~{::title},~{::link},~{})">
+    <meta charset="UTF-8">
+    <title>用户信息</title>
+    <link rel="stylesheet" th:href="@{/css/chat/changeAvatar.css}">
+    <link rel=stylesheet th:href="@{/css/chat/cropper.css}">
+</head>
+<body>
+<script th:inline="javascript">
+    let initSrc = [[${initSrc}]];
+</script>
+<script th:src="@{/cropper/croppers.js}"></script>
+<script th:inline="javascript" th:src="@{/js/chat/changeAvatar.js}"></script>
+</body>
+</html>

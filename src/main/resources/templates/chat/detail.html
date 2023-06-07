@@ -4,22 +4,83 @@
     <meta charset="UTF-8">
     <title>详情页</title>
     <link rel="stylesheet" th:href="@{/css/chat/detail.css}">
+    <link rel="stylesheet" th:href="@{/emoji/lib/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/emoji/lib/css/jquery.mCustomScrollbar.min.css}">
+    <link rel="stylesheet" th:href="@{/emoji/dist/css/jquery.emoji.css}">
+    <link rel="stylesheet" th:href="@{/emoji/lib/css/railscasts.css}">
+    <link rel="stylesheet" th:href="@{/emoji/dist/css/index.css}">
 </head>
 <body>
 <div class="container" th:if="${id != 'blank'}" th:data-id="${id}">
     <div class="right">
-        <div class="top"><span>To: <span class="name sendTo"></span></span></div>
+        <div class="top">
+            <span>To: <span class="name sendTo"></span></span>
+        </div>
         <div class="chat active active-chat">
             <div class="conversation-start"><span th:text="${createTime}"></span></div>
         </div>
-        <div class="write">
-            <a href="javascript:;" class="write-link attach"></a>
-            <input class="message" type="text"/>
-            <a href="javascript:;" class="write-link smiley"></a>
-            <a href="javascript:;" class="write-link send"></a>
+        <div class="toolBar">
+            <div class="left-side">
+                <div class="emoji"></div>
+                <div class="screenshot"></div>
+                <div class="pick-picture"></div>
+                <div class="pick-file"></div>
+            </div>
+            <div class="right-side">
+                <div class="chat-history"></div>
+            </div>
+        </div>
+        <div id="editor" contenteditable="true"></div>
+        <!--        <a href="javascript:;" class="write-link smiley"></a>-->
+        <!--        <div class="write">-->
+        <!--            <a href="javascript:;" class="write-link attach"></a>-->
+        <!--            <input class="message" type="text"/>-->
+        <!--            <a href="javascript:;" class="write-link smiley"></a>-->
+        <!--            <a href="javascript:;" class="write-link send"></a>-->
+        <!--        </div>-->
+        <div class="footer">
+            <div class="chooseEnter">
+                <div class="byEnter">
+                    <label>
+                        <input type="checkbox" checked>
+                        <span>按Enter键发送消息</span>
+                    </label>
+                </div>
+                <div class="byCtrlEnter">
+                    <label>
+                        <input type="checkbox">
+                        <span>按Ctrl+Enter键发送消息</span>
+                    </label>
+                </div>
+            </div>
+            <button class="sendBtn layui-btn layui-btn-sm layui-btn-normal">发送<span>|</span><i class="sendWays"></i>
+            </button>
         </div>
     </div>
 </div>
 </body>
+<script>
+    // 定义最后光标对象
+    var lastEditRange, $editor = $('#editor'), lastClicked;
+    // 编辑框点击事件
+    $editor.click(function () {
+        // 获取选定对象
+        var selection = getSelection();
+        // 设置最后光标对象
+        lastEditRange = selection.getRangeAt(0);
+    })
+    // 编辑框按键弹起事件
+    $editor.keyup(function () {
+        // 获取选定对象
+        var selection = getSelection();
+        // 设置最后光标对象
+        lastEditRange = selection.getRangeAt(0);
+    })
+</script>
+<script th:src="@{/emoji/lib/script/jquery.min.js}"></script>
+<script th:src="@{/emoji/lib/script/highlight.pack.js}"></script>
+<script th:src="@{/emoji/lib/script/jquery.mousewheel-3.0.6.min.js}"></script>
+<script th:src="@{/emoji/lib/script/jquery.mCustomScrollbar.min.js}"></script>
+<script th:src="@{/emoji/dist/js/jquery.emoji.js}"></script>
 <script th:src="@{/js/chat/detail.js}"></script>
 </html>

@@ -2,6 +2,13 @@
     box-sizing: border-box;
 }
 
+div {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 p:hover {
     cursor: default;
 }
@@ -605,6 +612,11 @@ li a {
     height: 2.5em;
     border-radius: 7px;
     margin-top: 1.8em;
+    cursor: pointer;
+}
+
+.chat-line.focus {
+    background-color: #f3f4f5;
 }
 
 .user-avatar {

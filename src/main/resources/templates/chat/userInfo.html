@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:include="header :: common_header(~{::title},~{::link},~{})">
+    <meta charset="UTF-8">
+    <title>用户信息</title>
+    <link rel="stylesheet" th:href="@{/css/chat/userInfo.css}">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div>
+            <img class="avatar" src="">
+            <div class="pickAvatar">
+                <img class="camera" th:src="@{/img/camera.png}">
+            </div>
+        </div>
+        <div>
+            <div class="name"></div>
+            <div class="signature"></div>
+        </div>
+    </div>
+    <hr>
+    <div class="detailInfo">
+        <div>
+            <span>账号</span>
+            <span class="account"></span>
+        </div>
+        <div>
+            <span>个人    </span>
+            <span class="personal"></span>
+        </div>
+        <div>
+            <span>所在地   </span>
+            <span class="location"></span>
+        </div>
+        <div>
+            <span>电话    </span>
+            <span class="tel"></span>
+        </div>
+        <br>
+        <div>
+            <span>职业    </span>
+            <span class="job"></span>
+        </div>
+        <div>
+            <span>公司    </span>
+            <span class="company"></span>
+        </div>
+        <div>
+            <span>邮箱    </span>
+            <span class="email"></span>
+        </div>
+        <div>
+            <span>学校    </span>
+            <span class="school"></span>
+        </div>
+    </div>
+</div>
+</body>
+<script th:src="@{/js/chat/userInfo.js}"></script>
+</html>

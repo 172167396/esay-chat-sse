@@ -11,7 +11,7 @@ Array.isStrictEmpty = function (arr) {
 Array.prototype.toMap = function (field, mergeHandler) {
     let $this = $(this);
     let newArray = $this && Array.from($this);
-    if(newArray == null) return;
+    if (newArray == null) return;
     let map = new Map();
     newArray.forEach(o => {
         let key = o[field] || null;
@@ -39,12 +39,14 @@ class FetchApi {
             .then(res => res.json())
             .then(json => {
                 if (json?.code !== 200) {
-                    top.layer.alert(json?.msg);
+                    top.layer.alert(json.msg ?? json.error);
                     return null;
                 }
                 return json;
             })
-            .catch(e => top.layer.alert(e.responseText));
+            .catch(e => {
+                top.layer.alert(e.responseText)
+            });
     }
 
     post(url, data) {
@@ -52,7 +54,7 @@ class FetchApi {
             .then(res => res.json())
             .then(json => {
                 if (json?.code !== 200) {
-                    top.layer.alert(json?.msg);
+                    top.layer.alert(json.msg ?? json.error);
                     return null;
                 }
                 return json;

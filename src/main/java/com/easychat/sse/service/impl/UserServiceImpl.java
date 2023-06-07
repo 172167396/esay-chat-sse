@@ -1,8 +1,10 @@
 package com.easychat.sse.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.easychat.sse.dao.UserMapper;
 import com.easychat.sse.event.RegisterEvent;
+import com.easychat.sse.event.UserUpdateEvent;
 import com.easychat.sse.exception.CustomRuntimeException;
 import com.easychat.sse.model.domain.UserDomain;
 import com.easychat.sse.model.dto.*;
@@ -12,6 +14,7 @@ import com.easychat.sse.model.entity.UserFriendGroup;
 import com.easychat.sse.model.entity.UserRelation;
 import com.easychat.sse.model.vo.SimpleFriendVO;
 import com.easychat.sse.model.vo.SimpleGroupVO;
+import com.easychat.sse.model.vo.UserInfoVO;
 import com.easychat.sse.service.ApplyFriendService;
 import com.easychat.sse.service.UserRelationService;
 import com.easychat.sse.service.UserService;
@@ -35,7 +38,7 @@ import static com.easychat.sse.constant.Constant.DEFAULT_GROUP;
 import static com.easychat.sse.constant.Constant.PASSWD_SECRET;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> implements UserService {
     @Resource
     UserMapper userMapper;
     @Resource
@@ -179,6 +182,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public String getFirstGroupId(String applyUser) {
         return userMapper.getFirstGroupId(applyUser);
+    }
+
+    @Override
+    public UserInfoVO getUserInfo(String userId) {
+        UserEntity userEntity = userMapper.getById(userId);
+        return UserInfoVO.from(userEntity);
+    }
+
+    @Override
+    public void updateAvatarPath(UserDomain user, String avatarPath) {
+        userMapper.updateAvatarPath(user.getId(),avatarPath);
+        user.setAvatarPath(MinioUtil.buildPath(avatarPath));
+        ContextHolder.publish(new UserUpdateEvent(user));
     }
 
 

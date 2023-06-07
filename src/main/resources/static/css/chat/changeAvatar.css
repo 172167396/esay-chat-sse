@@ -1,0 +1,81 @@
+.readyimg {
+    width: 200px !important;
+    height: 200px !important;
+}
+
+.cropper-btn-div {
+    margin-top: 2em;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.bottomBtn {
+    margin-top: 2em;
+}
+
+.layui-col-xs6 {
+    width: 100%;
+}
+
+.layui-col-xs9 {
+    width: 13em !important;
+    padding: 0 !important;
+}
+
+.layui-col-xs3 {
+    width: 12em !important;
+    height: 12em !important;
+}
+
+.img-preview {
+    width: 11em !important;
+    height: 11em !important;
+    overflow: hidden;
+    margin-left: 2em;
+}
+
+button.lbtn {
+    background-position: center !important;
+    background-color: #009688 !important;
+    background-size: 90% !important;
+    border-radius: 3px !important;
+    height: 35px !important;
+    line-height: 35px !important;
+}
+
+.move-to {
+    background: url("/img/move-to.png") no-repeat;
+}
+
+.rotate-left {
+    background: url("/img/rotate-left.png") no-repeat;
+}
+
+.rotate-right {
+    background: url("/img/rotate-right.png") no-repeat;
+}
+
+.enlarge {
+    background: url("/img/enlarge.png") no-repeat;
+}
+
+.shrink {
+    background: url("/img/shrink.png") no-repeat;
+}
+
+.reset {
+    background: url("/img/reset.png") no-repeat;
+}
+
+.save {
+    background: url("/img/save.png") no-repeat;
+}
+
+.cropper-func {
+    width: 81% !important;
+}
+
+.notice {
+    margin-left: 3em !important;
+}

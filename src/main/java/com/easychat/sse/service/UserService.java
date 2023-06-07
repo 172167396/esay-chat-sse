@@ -1,13 +1,15 @@
 package com.easychat.sse.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.easychat.sse.model.domain.UserDomain;
 import com.easychat.sse.model.dto.*;
 import com.easychat.sse.model.entity.UserEntity;
 import com.easychat.sse.model.vo.SimpleGroupVO;
+import com.easychat.sse.model.vo.UserInfoVO;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserService extends IService<UserEntity> {
     UserEntity getUserByAccount(String userAccount);
     void login(String account, String password);
     void doRegister(String account, String nickName, String password);
@@ -30,4 +32,7 @@ public interface UserService {
 
     String getFirstGroupId(String applyUser);
 
+    UserInfoVO getUserInfo(String userId);
+
+    void updateAvatarPath(UserDomain user, String avatarPath);
 }

@@ -51,6 +51,10 @@ input::-ms-input-placeholder { /* Microsoft Edge */
     text-align: left !important;
 }
 
+.inline {
+    display: inline !important;
+}
+
 .inline-block {
     display: inline-block !important;
 }

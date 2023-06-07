@@ -15,8 +15,6 @@ import com.easychat.sse.utils.DateTimeFormatUtil;
 import com.easychat.sse.utils.MinioUtil;
 import com.easychat.sse.utils.ObjectMapperUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.mgt.SecurityManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -39,7 +37,6 @@ import static com.easychat.sse.utils.DateTimeFormatUtil.getChatLineDisplayDate;
 public class WebSocketServer {
 
     private static ApplicationContext applicationContext;
-
 
     @OnOpen
     public void onOpen(Session session) {
@@ -64,9 +61,7 @@ public class WebSocketServer {
     @OnMessage
     public void onMsg(String message, Session session) {
         log.info("从客户端：{} 收到-->:{}", session.getId(), message);
-        UserDomain userDomain = (UserDomain) session.getUserProperties().get("userId");
-        SecurityManager securityManager = (SecurityManager) session.getUserProperties().get("securityManager");
-        SecurityUtils.setSecurityManager(securityManager);
+        UserDomain userDomain = (UserDomain) session.getUserProperties().get("user");
         SocketMessage socketMessage = ObjectMapperUtil.readValue(message, SocketMessage.class);
         String receiver = socketMessage.getReceiver();
         if (ObjectUtils.isEmpty(receiver)) return;

@@ -1,0 +1,58 @@
+.header {
+    display: flex;
+    align-items: center;
+}
+
+.header > div:nth-child(1) {
+    position: relative;
+    margin: 1em;
+    overflow: hidden;
+}
+
+.name {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.signature {
+    color: #989595;
+}
+
+.pickAvatar {
+    position: absolute;
+    display: inline-block;
+    left: 67%;
+    top: 71%;
+    background: black;
+    opacity: 0.5;
+    border-radius: 69% 0 0 0;
+}
+
+.pickAvatar img {
+    width: 1.5em;
+    padding: 2px;
+    scale: 0.8;
+    cursor: pointer;
+}
+
+.detailInfo div {
+    height: 2em;
+    line-height: 2em;
+    margin: 0 1.5em;
+}
+
+.detailInfo div > span:nth-child(1) {
+    color: #afafaf;
+    display: inline-block;
+    width: 14%;
+    text-align: justify;
+    text-align-last: justify;
+}
+
+.detailInfo div > span:nth-child(2) {
+    margin-left: 2em;
+}
+
+.avatar {
+    width: 5em;
+}

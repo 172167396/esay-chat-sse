@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public class ValidUtil {
 
-    public static boolean isAjax(HttpServletRequest request){
+    public static boolean isAjax(HttpServletRequest request) {
         String contentTypeHeader = request.getHeader("Content-Type");
         String acceptHeader = request.getHeader("Accept");
         String xRequestedWith = request.getHeader("X-Requested-With");
@@ -12,4 +12,5 @@ public class ValidUtil {
                 || (acceptHeader != null && acceptHeader.contains("application/json"))
                 || "XMLHttpRequest".equalsIgnoreCase(xRequestedWith));
     }
+
 }

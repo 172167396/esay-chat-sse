@@ -22,6 +22,7 @@
     <select id="getRecentChat" resultType="com.easychat.sse.model.dto.RecentChatDTO">
         SELECT
             u.`name` targetUserName,
+            ur.remark_name,
             u.id targetId,
             u.avatar_path,
             r.content briefMsg,
@@ -29,6 +30,7 @@
         FROM
             recent_chat rc
                 LEFT JOIN sys_user u ON rc.target_id = u.id
+                LEFT JOIN sys_user_relations ur on rc.target_id = ur.friend_id
                 LEFT JOIN (
                 SELECT
                     max(r.create_time),

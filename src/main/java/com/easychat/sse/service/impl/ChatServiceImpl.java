@@ -70,9 +70,9 @@ public class ChatServiceImpl extends ServiceImpl<ChatMapper, RecentChat> impleme
 
     @Override
     public RecentChat getByUserAndTarget(String userId, String targetId) {
-        RecentChat chat = chatMapper.getByUserAndTarget(userId, targetId);
-        if (chat != null) return chat;
-        return chatMapper.getByUserAndTarget(targetId, userId);
+        return chatMapper.getByUserAndTarget(userId, targetId);
+//        if (chat != null) return chat;
+//        return chatMapper.getByUserAndTarget(targetId, userId);
     }
 
 

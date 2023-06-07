@@ -35,7 +35,7 @@ VOLUME $MYPATH
 #RUN echo "-Dspring.datasource.url=\"$dsUrl\" -Dspring.datasource.username=$dsName -Dspring.datasource.password=$dsPwd -Dspring.redis.host=$redisHost -Dspring.redis.password=$redisPwd -Dminio.endpoint=\"$minioUrl\" -Dminio.accessKey=$minioName -Dminio.secretKey=$minioPwd"
 EXPOSE 10088
 
-# 运行jar包
+# 修改jar的更新时间为当前时间，注意有的基础镜像没有touch命令
 #RUN bash -c 'touch ./sse-chat.jar'
 #ENTRYPOINT 里的变量只能使用ENV里的
 ENTRYPOINT java -Dspring.datasource.url="$DSURL" -Dspring.datasource.username=$DSNAME -Dspring.datasource.password=$DSPWD -Dspring.redis.host=$REDISHOST -Dspring.redis.password=$REDISPWD -Dminio.endpoint="$MINIOURL" -Dminio.accessKey=$MINIONAME -Dminio.secretKey=$MINIOPWD -jar ./sse-chat.jar

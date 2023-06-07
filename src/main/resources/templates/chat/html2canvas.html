@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>html2canvas</title>
+    <script src="http://81.70.169.208:9000/common/jquery-3.0.0.min.js"></script>
+    <script src="http://81.70.169.208:9000/common/html2canvas.js"></script>
+    <style>
+        body {
+            height: 800px;
+            width: 100%;
+        }
+        #selection {
+            position: absolute;
+            background: #e0eaf1;
+            border: 1px solid #0c65a5;
+            /*width: 500px;*/
+            /*height: 600px;*/
+            /*left: 32%;*/
+        }
+        #selection.complete {
+            background: #E0F1E4;
+            border-color: #0CA50E;
+        }
+
+        :focus {
+            outline: none;
+        }
+
+        canvas {
+            /*width: 100% !important;*/
+            /*height: 800px !important;*/
+            z-index: 99;
+            float: left;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+<strong>Start coordinates:</strong><span id="start"></span>
+<strong>End coordinates:</strong><span id="end"></span>
+<div id="selection" style="border:1px solid lightgray;z-index: 9999"></div>
+<div id="capture" style="padding: 10px; background: #f5da55">
+    <h4 style="color: #000; ">Hello world!</h4>
+</div>
+<button class="saveImg">生成图片</button>
+</body>
+</html>
+<script>
+    $(".saveImg").click(function () {
+        let $body = $("body");
+        renderSelection($("#selection"))
+        html2canvas($body[0]).then(canvas => {
+            $body.append(canvas)
+            let imageURL = canvas.toDataURL("image/png");    //canvas转base64图片
+            // console.log(imageURL);
+
+        });
+    })
+
+
+    function renderSelection(area) {
+        var start = {};
+        var end = {};
+        var isSelecting = false;
+
+        $(window)
+            // Listen for selection
+            .on('mousedown', function ($event) {
+                // Update our state
+                isSelecting = true;
+                $(area).removeClass('complete');
+                start.x = $event.pageX;
+                start.y = $event.pageY;
+
+                // Display data in UI
+                $('#start').text('(' + start.x + ',' + start.y + ')');
+
+                // Add selection to screen
+                $(area).css({
+                    left: start.x,
+                    top: start.y
+                });
+            })
+            // Listen for movement
+            .on('mousemove', function ($event) {
+                // Ignore if we're not selecing
+                if (!isSelecting) {
+                    return;
+                }
+
+                // Update our state
+                end.x = $event.pageX;
+                end.y = $event.pageY;
+
+                // Move & resize selection to reflect mouse position
+                $(area).css({
+                    left: start.x < end.x ? start.x : end.x,
+                    top: start.y < end.y ? start.y : end.y,
+                    width: Math.abs(start.x - end.x),
+                    height: Math.abs(start.y - end.y)
+                });
+            })
+            // listen for end
+            .on('mouseup', function ($event) {
+                // Update our state
+                isSelecting = false;
+                $(area).addClass('complete');
+
+                // Display data in UI
+                $('#end').text('(' + end.x + ',' + end.y + ')');
+                html2canvas(canvasObj.get(0), {
+                    useCORS: true,
+                    width: canvasObj.width() + 5,
+                    height: canvasObj.height() - excelHeight,
+                    x: canvasObj.offset().left,
+                    y: canvasObj.parent().top + canvasOtherTopHeight
+                }).then(canvas => {
+                    // canvasObj.parent().find('.target-canvas-img').attr('src', canvas.toDataURL('image/png', 1.0));
+                    canvasObj.parent().find('.canvas-wrapper .canvas-word').append(canvas);
+                });
+
+
+            });
+
+    }
+
+</script>

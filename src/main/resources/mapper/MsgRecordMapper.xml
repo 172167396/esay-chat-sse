@@ -36,4 +36,13 @@
         order by create_time desc limit 0,50
     </select>
 
+    <select id="listRecord" resultType="com.easychat.sse.model.dto.MsgRecordDTO">
+        select
+        <include refid="column">
+            <property name="mr" value="r"/>
+        </include>
+        from message_record r
+        where r.sender_id = #{value}
+    </select>
+
 </mapper>

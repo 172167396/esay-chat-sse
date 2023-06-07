@@ -245,7 +245,7 @@ h1 {
 	font-family: 'Muli', sans-serif;
 	border-radius: 4px;
 	background-size: 6%;
-	background-position: right 8px;
+	background-position: 20em;
 }
 
 .content2 input[type="tel"] {

@@ -70,9 +70,10 @@ function changeUnReadNum(senderLi) {
         notReadSpan.removeClass("hide");
         notReadSpan.text("1");
     } else {
-        let num = notReadSpan.text();
-        if (num + 1 > 99) num = 99;
-        notReadSpan.text(num === 99 ? "99+" : num);
+        let num = notReadSpan.text(),numAfter;
+        if(num === '99+') return;
+        if ((numAfter = parseInt(num) + 1) > 99) numAfter = 99;
+        notReadSpan.text(numAfter === 99 ? "99+" : numAfter);
     }
 }
 

@@ -14,7 +14,7 @@ public class R<T> {
     private static final String ERROR_MSG = "操作失败";
 
     public static <T> R<T> success(T data) {
-        return new R<>(200, data, null);
+        return new R<>(200, data, SUCCESS_MSG);
     }
 
     public static <T> R<T> success() {
@@ -31,7 +31,7 @@ public class R<T> {
     }
 
     public static <T> R<T> fail() {
-        return fail(null,ERROR_MSG);
+        return fail(null, ERROR_MSG);
     }
 
     public static <T> R<T> fail(T data, String msg) {

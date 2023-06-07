@@ -1,8 +1,11 @@
 package com.easychat.sse.controller;
 
+import com.easychat.sse.aspect.ValidAuth;
+import com.easychat.sse.model.domain.UserDomain;
 import com.easychat.sse.model.dto.*;
 import com.easychat.sse.model.entity.UserEntity;
 import com.easychat.sse.model.vo.SimpleGroupVO;
+import com.easychat.sse.model.vo.UserInfoVO;
 import com.easychat.sse.response.R;
 import com.easychat.sse.service.UserService;
 import org.springframework.util.ObjectUtils;
@@ -81,17 +84,45 @@ public class UserController {
 
 
     @GetMapping("/group-list")
+    @ValidAuth(hasRole = 1)
     public R<List<IdName>> groupList() {
         return R.success(userService.queryUserGroup(getUserId()));
     }
 
+    @GetMapping("/group-list2")
+    @ValidAuth(hasRole = 1)
+    private R<List<IdName>> groupList2() {
+//        return R.success(userService.queryUserGroup(getUserId()));
+        U u1 = new U();
+        u1.print();
+        return R.success(null);
+    }
+
+    static class U extends UserController{
+        public void print(){
+            System.out.println(super.userService);
+        }
+    }
     /**
      * groupId可传可不传
+     *
      * @param id groupId
      */
     @GetMapping("/friends")
-    public R<List<SimpleGroupVO>> myFriends(@RequestParam(required = false) String id){
-        List<SimpleGroupVO> friends = userService.findMyFriends(getUserId(),id);
+    public R<List<SimpleGroupVO>> myFriends(@RequestParam(required = false) String id) {
+        List<SimpleGroupVO> friends = userService.findMyFriends(getUserId(), id);
         return R.success(friends);
     }
+
+    @GetMapping("/infoPage")
+    public ModelAndView infoPage() {
+        return new ModelAndView("chat/userInfo");
+    }
+
+    @GetMapping("/info")
+    public R<UserInfoVO> userInfo() {
+        UserInfoVO userInfoVO = userService.getUserInfo(getUserId());
+        return R.success(userInfoVO);
+    }
+
 }
