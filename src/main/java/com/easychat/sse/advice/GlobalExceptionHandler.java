@@ -19,8 +19,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomRuntimeException.class)
     public Object handleCustomerException(CustomRuntimeException exception, HttpServletRequest request) {
+        log.error(exception.getMessage(), exception);
         if (ValidUtil.isAjax(request)) {
-            log.error(exception.getMessage(), exception);
             return R.fail(exception.getMessage());
         }
         return new ModelAndView("500");
@@ -29,8 +29,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public Object handleException(Exception exception, HttpServletRequest request) {
+        log.error(exception.getMessage(), exception);
         if (ValidUtil.isAjax(request)) {
-            log.error(exception.getMessage(), exception);
             return R.fail(exception.getMessage());
         }
         return new ModelAndView("500");
