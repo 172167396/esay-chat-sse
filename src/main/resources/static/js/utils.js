@@ -155,11 +155,43 @@ function simplifyEmoji(emoji) {
 
 function simplifyEmojiFromHtml(html) {
     let p1 = new RegExp('<img class="emoji_icon" src="/emoji/dist/img/tieba/(\\d+?).jpg">', 'gm'),
-        p2 = new RegExp('<img class="emoji_icon" src="/emoji/dist/img/qq/(\\d+?).gif">', 'gm');
-    return html?.replace(p1, function ($0, $1) {
+        p2 = new RegExp('<img class="emoji_icon" src="/emoji/dist/img/qq/(\\d+?).gif">', 'gm'),
+        imgPattern = new RegExp('<img(.*?)>', 'gm');
+    html = html?.replace(p1, function ($0, $1) {
         return "[" + barAbbr[$1] + "]";
     }).replace(p2, function ($0, $1) {
         return "[" + qiuqiuAbbr[1] + "]";
     });
-
+    return html?.replace(imgPattern, function ($0, $1) {
+        return "[图片]";
+    })
 }
+
+function getExtension(name, includeDot) {
+    if (!name) return "";
+    if (!name.contains(".")) {
+        return ""
+    }
+    let index = includeDot ? name.lastIndexOf(".") : name.lastIndexOf(".") + 1;
+    return name.slice(index);
+}
+
+function isPicture(ext) {
+    if (!ext) return false;
+    ext = ext.toLowerCase();
+    return ext === "jpg" || ext === "jpeg" || ext === "png";
+}
+
+//此方法只能用于预览
+function getObjectURL(file) {
+    let url = null;
+    if (window.createObjectURL !== undefined) { // basic
+        url = window.createObjectURL(file);
+    } else if (window.URL !== undefined) { // mozilla(firefox)
+        url = window.URL.createObjectURL(file);
+    } else if (window.webkitURL !== undefined) { // webkit or chrome
+        url = window.webkitURL.createObjectURL(file);
+    }
+    return url;
+}
+

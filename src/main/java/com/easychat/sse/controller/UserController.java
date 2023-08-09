@@ -1,7 +1,6 @@
 package com.easychat.sse.controller;
 
 import com.easychat.sse.aspect.ValidAuth;
-import com.easychat.sse.model.domain.UserDomain;
 import com.easychat.sse.model.dto.*;
 import com.easychat.sse.model.entity.UserEntity;
 import com.easychat.sse.model.vo.SimpleGroupVO;
@@ -89,20 +88,6 @@ public class UserController {
         return R.success(userService.queryUserGroup(getUserId()));
     }
 
-    @GetMapping("/group-list2")
-    @ValidAuth(hasRole = 1)
-    private R<List<IdName>> groupList2() {
-//        return R.success(userService.queryUserGroup(getUserId()));
-        U u1 = new U();
-        u1.print();
-        return R.success(null);
-    }
-
-    static class U extends UserController{
-        public void print(){
-            System.out.println(super.userService);
-        }
-    }
     /**
      * groupId可传可不传
      *
@@ -117,6 +102,11 @@ public class UserController {
     @GetMapping("/infoPage")
     public ModelAndView infoPage() {
         return new ModelAndView("chat/userInfo");
+    }
+
+    @GetMapping("/info-edit")
+    public ModelAndView infoEdit() {
+        return new ModelAndView("chat/editUserInfo");
     }
 
     @GetMapping("/info")

@@ -9,9 +9,9 @@ import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.crazycake.shiro.RedisCacheManager;
 import org.crazycake.shiro.RedisManager;
 import org.crazycake.shiro.RedisSessionDAO;
-import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+//import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+//import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @Configuration
-public class shiroConfig {
+public class ShiroConfig {
 
     @Resource
     RedisProperties redisProperties;
@@ -122,16 +122,16 @@ public class shiroConfig {
         return authorizationAttributeSourceAdvisor;
     }
 
-    /**
-     * 加入注解的使用，不加入这个注解不生效
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
-        DefaultAdvisorAutoProxyCreator defaultAAP = new DefaultAdvisorAutoProxyCreator();
-        defaultAAP.setProxyTargetClass(true);
-        return defaultAAP;
-    }
+//    /**
+//     * 加入注解的使用，不加入这个注解不生效
+//     */
+//    @Bean
+//    @ConditionalOnMissingBean
+//    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+//        DefaultAdvisorAutoProxyCreator defaultAAP = new DefaultAdvisorAutoProxyCreator();
+//        defaultAAP.setProxyTargetClass(true);
+//        return defaultAAP;
+//    }
 
 }
 

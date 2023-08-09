@@ -7,7 +7,9 @@ Array.isStrictEmpty = function (arr) {
     }
     return arr && arr.some(e => !e || $.trim(e) === '');
 }
-
+String.prototype.contains = function (s) {
+    return this.includes(s);
+}
 Array.prototype.toMap = function (field, mergeHandler) {
     let $this = $(this);
     let newArray = $this && Array.from($this);

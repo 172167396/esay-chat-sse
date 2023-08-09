@@ -12,6 +12,7 @@ public enum MessageType {
     FILE(3, "文件"),
     REFRESH_GROUP_USER(4, "刷新列表好友"),
     DELETE_USER(5, "删除好友"),
+    NEW_FRIEND_JOINED(6, "新加好友"),
     ;
 
     private final int type;

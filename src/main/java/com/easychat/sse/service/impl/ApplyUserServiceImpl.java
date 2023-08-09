@@ -25,7 +25,6 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import static com.easychat.sse.shiro.ShiroUtil.getUser;
 
 @Slf4j
 @Service
@@ -40,7 +39,6 @@ public class ApplyUserServiceImpl implements ApplyFriendService {
     UserService userService;
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public void save(FriendApply entity) {
         applyFriendMapper.save(entity);
     }
@@ -70,7 +68,7 @@ public class ApplyUserServiceImpl implements ApplyFriendService {
             return;
         }
         if (applyEntity.getState() != ApplyState.NOT_HANDLE.getState()) {
-            throw new CustomRuntimeException("改请求已处理,请勿重复操作");
+            throw new CustomRuntimeException("该请求已处理,请勿重复操作");
         }
         UserRelation relation = userRelationService.getOne(Wrappers.<UserRelation>lambdaQuery().eq(true, UserRelation::getFriendId, args.getId()));
         if (relation != null) {

@@ -408,6 +408,10 @@ html, body {
 .pick-picture {
     background: url("/img/pick-picture.png") no-repeat center;
     background-size: 132%;
+    display: block;
+    width: 20px;
+    height: 23px;
+    margin-top: 5px;
 }
 
 .pick-file {

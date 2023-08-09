@@ -101,7 +101,7 @@ function getFriendsAndRefreshGroup(groupId) {
                             </a>
                             <dl class="layui-nav-child ${!e.users ? 'emptyDl' : ''}">
                             ${e.users?.length > 0 ? e.users.map(item => {
-                    return `<dd class="friend" data-id="${item.id}"><img class="avatarInGroup" src="${item.avatar}"><a class="friendName inline-block" href="javascript:;">${item.name}</a></dd>`;
+                    return `<dd class="friend" data-id="${item.id}"><img alt="" class="avatarInGroup" src="${item.avatar}"><a class="friendName inline-block" href="javascript:;">${item.name}</a></dd>`;
                 }).join('') : ''
                 }</dl></li>`;
                 const $li = $(tmp);
@@ -120,6 +120,10 @@ function getFriendsAndRefreshGroup(groupId) {
         refreshNav();
         bindUserClick();
     });
+}
+
+function showNewFriendJoined(msgJson) {
+
 }
 
 function refreshNav() {
@@ -157,6 +161,7 @@ function bindUserClick() {
             let tmp = $chatLine;
             $chatLine.remove();
             $recentChatUl.prepend(tmp);
+            tmp.click();
         }
         $chatPanel.click();
         let iframeId = $rightIframe.attr("data-id");

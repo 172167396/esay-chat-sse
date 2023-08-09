@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:include="header :: common_header(~{::title},~{::link},~{})">
+    <meta charset="UTF-8">
+    <title>编辑用户信息</title>
+    <link rel="stylesheet" th:href="@{/css/chat/userInfo.css}">
+</head>
+<body>
+<div class="container">
+    <!--    <div class="header">-->
+    <!--        <div>-->
+    <!--            <img class="avatar" src="">-->
+    <!--            <div class="pickAvatar">-->
+    <!--                <img class="camera" th:src="@{/img/camera.png}">-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--        <div>-->
+    <!--            <div class="name"></div>-->
+    <!--            <div class="signature"></div>-->
+    <!--        </div>-->
+    <!--    </div>-->
+    <!--    <hr>-->
+    <div class="detailInfo">
+        <div>
+            <span>昵&nbsp;&nbsp;称</span>
+            <span class="name"></span>
+        </div>
+        <div>
+            <span>签&nbsp;&nbsp;名</span>
+            <span class="personal"></span>
+        </div>
+        <div>
+            <div>
+                <span>性&nbsp;&nbsp;别</span>
+                <select class="group-select" name="group-select">
+                    <option value="1">男</option>
+                    <option value="0">女</option>
+                </select>
+            </div>
+            <div>
+                <span>生&nbsp;&nbsp;日</span>
+                <div class="layui-input-inline" style="width: 200px !important;">
+                    <input type="text" autocomplete="off" name="birthday" id="birthday" class="layui-input">
+                </div>
+            </div>
+
+        </div>
+        <div>
+            <span>职&nbsp;&nbsp;业</span>
+            <span class="tel"></span>
+        </div>
+        <br>
+        <div>
+            <span>公&nbsp;&nbsp;司</span>
+            <span class="company"></span>
+        </div>
+        <div>
+            <span>邮&nbsp;&nbsp;箱</span>
+            <span class="email"></span>
+        </div>
+        <div>
+            <span>学&nbsp;&nbsp;校</span>
+            <span class="school"></span>
+        </div>
+    </div>
+</div>
+</body>
+<script th:src="@{/js/chat/editUserInfo.js}"></script>
+</html>

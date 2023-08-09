@@ -37,6 +37,10 @@ function onReceiveMsg(msgJson) {
             case "REFRESH_GROUP_USER":
                 refreshUserGroup(msgJson);
                 break;
+            case "NEW_FRIEND_JOINED":
+                //todo 加好友之后的系统消息展示
+                newFriendJoined(msgJson);
+                break;
         }
         return;
     }
@@ -48,9 +52,13 @@ function refreshUserGroup(msgJson) {
     window.getFriendsAndRefreshGroup(msgJson.groupId);
 }
 
+function newFriendJoined(msgJson){
+    window.showNewFriendJoined(msgJson);
+}
+
 function showMsg(senderLi, msgJson) {
     //改变消息预览
-    senderLi.find(".short-desc").text(msgJson.content);
+    senderLi.find(".short-desc").text(simplifyEmojiFromHtml(msgJson.content));
     if (msgJson.type === 'PERSONAL') {
         //右侧iframe添加消息
         let chatMain = $(`iframe[data-id=${msgJson.sender}]`).contents().find(".chat");
@@ -92,7 +100,7 @@ function insertChatLine(e) {
                                         <p class="nickName overflowEllips">${targetName}</p>
                                         <p class="chatDate">${e?.createTime}</p>
                                         <span class="notRead ${e.content === '' ? 'hide' : ''}">${e.content === '' ? '' : '1'}</span>
-                                        <p class="short-desc overflowEllips" title="${e.content}">${e.content}</p>
+                                        <p class="short-desc overflowEllips" title="${simplifyEmojiFromHtml(e.content)}">${simplifyEmojiFromHtml(e.content)}</p>
                                     </div>
                                 </div>
                             </li>`);

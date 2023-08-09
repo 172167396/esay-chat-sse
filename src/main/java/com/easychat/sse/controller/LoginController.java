@@ -42,7 +42,7 @@ public class LoginController {
                              @RequestParam("password") String password,
                              @RequestParam("captcha") String captcha,
                              HttpServletRequest request) {
-        String storeCaptcha = (String) RedisUtil.get(request.getRequestedSessionId());
+        String storeCaptcha = (String) RedisUtil.get(request.getSession().getId());
         if (ObjectUtils.isEmpty(storeCaptcha)) {
             return R.fail("请刷新验证码");
         }
@@ -61,6 +61,7 @@ public class LoginController {
     public String index(Model model) {
         model.addAttribute("username", getUser().getName());
         model.addAttribute("userAvatar", getUser().getAvatarPath());
+        model.addAttribute("text", "12345");
         return "chat/index";
     }
 }

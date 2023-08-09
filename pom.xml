@@ -32,10 +32,15 @@
             <optional>true</optional>
         </dependency>
         <!-- 添加图形验证码依赖 -->
+<!--        <dependency>-->
+<!--            <groupId>cn.hutool</groupId>-->
+<!--            <artifactId>hutool-captcha</artifactId>-->
+<!--            <version>5.8.5</version>-->
+<!--        </dependency>-->
         <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-captcha</artifactId>
-            <version>5.8.5</version>
+            <groupId>com.github.whvcse</groupId>
+            <artifactId>easy-captcha</artifactId>
+            <version>1.6.2</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>

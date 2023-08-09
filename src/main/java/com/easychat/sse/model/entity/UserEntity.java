@@ -34,11 +34,11 @@ public class UserEntity implements Serializable {
     @TableField("address")
     private String address;
 
-    @TableField("mobile")
-    private String mobile;
-
     @TableField("avatar_id")
     private String avatarId;
+
+    @TableField("mobile")
+    private String mobile;
 
     @TableField("avatar_path")
     private String avatarPath;
@@ -73,7 +73,7 @@ public class UserEntity implements Serializable {
     @TableField("school")
     private String school;
 
-    @TableField("createTime")
+    @TableField("create_time")
     private LocalDateTime createTime;
 
     @TableField(exist = false)

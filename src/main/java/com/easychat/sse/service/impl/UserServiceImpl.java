@@ -27,6 +27,7 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
@@ -118,6 +119,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> impleme
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<IdName> queryUserGroup(String userId) {
         return userMapper.queryUserGroup(userId);
     }
@@ -187,12 +189,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserEntity> impleme
     @Override
     public UserInfoVO getUserInfo(String userId) {
         UserEntity userEntity = userMapper.getById(userId);
+        if (userEntity == null) {
+            throw new CustomRuntimeException("用户不存在,请刷新页面");
+        }
         return UserInfoVO.from(userEntity);
     }
 
     @Override
+    @Transactional
     public void updateAvatarPath(UserDomain user, String avatarPath) {
-        userMapper.updateAvatarPath(user.getId(),avatarPath);
+        userMapper.updateAvatarPath(user.getId(), avatarPath);
         user.setAvatarPath(MinioUtil.buildPath(avatarPath));
         ContextHolder.publish(new UserUpdateEvent(user));
     }

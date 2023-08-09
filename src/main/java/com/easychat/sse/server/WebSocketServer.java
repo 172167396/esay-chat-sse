@@ -58,7 +58,7 @@ public class WebSocketServer {
         log.info("客户端：{}连接断开", session.getId());
     }
 
-    @OnMessage
+    @OnMessage(maxMessageSize = 10240000)
     public void onMsg(String message, Session session) {
         log.info("从客户端：{} 收到-->:{}", session.getId(), message);
         UserDomain userDomain = (UserDomain) session.getUserProperties().get("user");
