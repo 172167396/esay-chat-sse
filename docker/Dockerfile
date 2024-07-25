@@ -8,6 +8,7 @@ ARG dsUrl
 ARG dsName
 ARG dsPwd
 ARG redisHost
+ARG redisPort
 ARG redisPwd
 ARG minioUrl
 ARG minioName
@@ -18,6 +19,7 @@ ENV DSURL=$dsUrl
 ENV DSNAME=$dsName
 ENV DSPWD=$dsPwd
 ENV REDISHOST=$redisHost
+ENV REDISPORT=$redisPort
 ENV REDISPWD=$redisPwd
 ENV MINIOURL=$minioUrl
 ENV MINIONAME=$minioName
@@ -38,4 +40,4 @@ EXPOSE 10088
 # 修改jar的更新时间为当前时间，注意有的基础镜像没有touch命令
 #RUN bash -c 'touch ./sse-chat.jar'
 #ENTRYPOINT 里的变量只能使用ENV里的
-ENTRYPOINT java -Dspring.datasource.url="$DSURL" -Dspring.datasource.username=$DSNAME -Dspring.datasource.password=$DSPWD -Dspring.redis.host=$REDISHOST -Dspring.redis.password=$REDISPWD -Dminio.endpoint="$MINIOURL" -Dminio.accessKey=$MINIONAME -Dminio.secretKey=$MINIOPWD -jar ./sse-chat.jar
+ENTRYPOINT java -Dspring.datasource.url="$DSURL" -Dspring.datasource.username=$DSNAME -Dspring.datasource.password=$DSPWD -Dspring.redis.host=$REDISHOST -Dspring.redis.port=$REDISPORT -Dspring.redis.password=$REDISPWD -Dminio.endpoint="$MINIOURL" -Dminio.accessKey=$MINIONAME -Dminio.secretKey=$MINIOPWD -jar ./sse-chat.jar
