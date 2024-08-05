@@ -18,25 +18,29 @@ public class CaptchaController {
 
 
     @GetMapping("/captcha")
-    @ResponseBody
     public void captcha(HttpServletRequest request, HttpServletResponse response) {
-        ArithmeticCaptcha captcha = new ArithmeticCaptcha(130, 48);
-        captcha.setLen(2);
-        captcha.getArithmeticString();
-        String text = captcha.text();
-        RedisUtil.set(request.getSession().getId(), text, 1800L);
-        response.setContentType("image/png");
-        try (OutputStream out = response.getOutputStream()) {
-            captcha.out(out);
-            log.info("验证码为:{}", text);
-        } catch (IOException e) {
-            try {
-                response.sendError(500);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+        try {
+            ArithmeticCaptcha captcha = new ArithmeticCaptcha(130, 48);
+            captcha.setLen(2);
+            captcha.getArithmeticString();
+            String text = captcha.text();
+            RedisUtil.set(request.getSession().getId(), text, 1800L);
+            response.setContentType("image/png");
+            try (OutputStream out = response.getOutputStream()) {
+                captcha.out(out);
+                log.info("验证码为:{}", text);
+            } catch (IOException e) {
+//                try {
+//                    response.sendError(500);
+//                } catch (IOException ex) {
+//                    ex.printStackTrace();
+//                }
+                log.error(e.getMessage(), e);
             }
-            log.error(e.getMessage(), e);
+        }catch (Exception e) {
+            log.error(e.getMessage(),e);
         }
+
 
     }
 }
