@@ -27,6 +27,8 @@ ENV MINIOPWD=$minioPwd
 
 #docker exec 进入容器后的所在目录
 WORKDIR $MYPATH
+RUN set -xe \
+&& apk --no-cache add ttf-dejavu fontconfig
 # ADD 命令必须提供两个参数，第一个参数为：宿主机中的目录，相对于Dockerfile文件
 # 第二个参数为容器中的目录，相对于WORKDIR
 #意思就是把workspace里的sse.jar复制到容器内workDir下
